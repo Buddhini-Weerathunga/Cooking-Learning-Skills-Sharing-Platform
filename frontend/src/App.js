@@ -18,11 +18,15 @@ import CertificationList from "./Pages/Certifications/list";
 import CertificationCreate from "./Pages/Certifications/create";
 import CertificationEdit from "./Pages/Certifications/edit";
 import CertificationDetail from "./Pages/Certifications/detail";
+import Navbar from './Components/Navbar';
+import CommunityRoutes from './routes/CommunityRoutes';
+import ErrorBoundary from './Components/ErrorBoundary';
 
 function App() {
   return (
-    <div>
-      <Router>
+    <Router>
+      <ErrorBoundary>
+        <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/view" element={<View />} />
@@ -53,9 +57,10 @@ function App() {
           />
           <Route path="/certifications/:id" element={<CertificationDetail />} />
           <Route path="/certifications" element={<CertificationList />} />
+          <Route path="/community/*" element={<CommunityRoutes />} />
         </Routes>
-      </Router>
-    </div>
+      </ErrorBoundary>
+    </Router>
   );
 }
 

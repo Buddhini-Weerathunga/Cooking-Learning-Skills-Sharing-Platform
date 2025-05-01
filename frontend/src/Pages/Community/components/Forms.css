@@ -1,0 +1,59 @@
+.modal-content {
+  border-radius: 15px;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.ingredient-item,
+.instruction-item {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.preview-image {
+  max-width: 200px;
+  border-radius: 8px;
+  margin-top: 10px;
+}
+
+.tag-input {
+  margin-bottom: 15px;
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.tag-item {
+  background-color: #e9ecef;
+  padding: 4px 12px;
+  border-radius: 15px;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.tag-item .remove-tag {
+  cursor: pointer;
+  color: #dc3545;
+}
+
+.comment-form {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
+.reply-form {
+  margin-left: 40px;
+  margin-top: 10px;
+} 

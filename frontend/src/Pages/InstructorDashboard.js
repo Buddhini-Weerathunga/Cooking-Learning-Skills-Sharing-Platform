@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import CourseList from "./Courses/CourseList";
 
@@ -20,42 +20,40 @@ function InstructorDashboard() {
     },
   };
 
-  // Fetch courses when the component mounts
-  useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const fetchCourses = async () => {
+  const fetchCourses = useCallback(async () => {
     try {
       const res = await axios.get(
         `http://localhost:8080/api/courses/instructor?username=${user.username}`,
         axiosConfig
       );
-      console.log("Courses data:", res.data); // Log response for debugging
+      console.log("Courses data:", res.data);
       if (Array.isArray(res.data)) {
-        setCourses(res.data); // Update courses state with fetched data
+        setCourses(res.data);
       } else {
         console.warn("Expected array, got:", res.data);
-        setCourses([]); // If not an array, set courses to an empty array
+        setCourses([]);
       }
     } catch (err) {
       console.error("Error fetching courses:", err);
-      setCourses([]); // Set to empty array if error occurs
+      setCourses([]);
     }
-  };
+  }, [user.username, axiosConfig]);
+
+  useEffect(() => {
+    fetchCourses();
+  }, [fetchCourses]);
 
   const handleCreateCourse = async () => {
     try {
       const courseData = {
         ...newCourse,
-        price: parseFloat(newCourse.price), // Ensure price is a number
+        price: parseFloat(newCourse.price),
       };
       await axios.post(
         `http://localhost:8080/api/courses/create?username=${user.username}`,
         courseData,
         axiosConfig
       );
-      // Reset the form after successful creation
       setNewCourse({
         title: "",
         description: "",
@@ -64,7 +62,7 @@ function InstructorDashboard() {
         startDate: "",
         closingDate: "",
       });
-      fetchCourses(); // Refresh the list of courses after adding a new one
+      fetchCourses();
     } catch (err) {
       console.error("Error creating course:", err);
     }

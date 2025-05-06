@@ -15,6 +15,13 @@ public class CommunityGroup {
 
     private String description;
 
+    private String category;
+
+    @Column(length = 1000)
+    private String groupRules;
+
+    private Boolean privateGroup;
+
     // Constructors
     public CommunityGroup() {
     }
@@ -47,5 +54,29 @@ public class CommunityGroup {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getGroupRules() {
+        return groupRules;
+    }
+
+    public void setGroupRules(String groupRules) {
+        this.groupRules = groupRules;
+    }
+
+    public Boolean getPrivateGroup() {
+        return privateGroup;
+    }
+
+    public void setPrivateGroup(Boolean privateGroup) {
+        this.privateGroup = privateGroup;
     }
 } // ✅ Close the class properly here!

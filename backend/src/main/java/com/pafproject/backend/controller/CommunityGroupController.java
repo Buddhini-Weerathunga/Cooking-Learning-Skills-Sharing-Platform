@@ -37,6 +37,9 @@ public class CommunityGroupController {
                 .orElseThrow(() -> new RuntimeException("Community Group not found with id: " + id));
         group.setName(groupDetails.getName());
         group.setDescription(groupDetails.getDescription());
+        group.setCategory(groupDetails.getCategory());
+        group.setGroupRules(groupDetails.getGroupRules());
+        group.setPrivateGroup(groupDetails.getPrivateGroup());
         return communityGroupRepository.save(group);
     }
 

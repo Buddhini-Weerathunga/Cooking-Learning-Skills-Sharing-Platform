@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/groups")
-@CrossOrigin(origins = "http://localhost:3000")  // Allow requests from React (frontend)
+@CrossOrigin(origins = "*")
 public class GroupController {
 
     @Autowired

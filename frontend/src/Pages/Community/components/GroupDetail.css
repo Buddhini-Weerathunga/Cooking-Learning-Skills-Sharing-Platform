@@ -1,0 +1,204 @@
+.group-detail-page {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fdfaf6;
+    color: #333;
+  }
+  
+  /* Carousel Section */
+  .hero-carousel .carousel-image {
+    height: 65vh;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  
+  .carousel-content {
+    position: absolute;
+    bottom: 20%;
+    left: 10%;
+    color: #fff;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.7);
+  }
+  
+  .carousel-content h2 {
+    font-size: 3rem;
+    font-weight: 700;
+  }
+  
+  .carousel-content p {
+    font-size: 1.2rem;
+  }
+  
+  /* Group Info Section */
+  .group-info-section {
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  
+  .group-info-section h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+  }
+  
+  .group-stats {
+    display: flex;
+    justify-content: flex-end;
+    gap: 40px;
+    align-items: center;
+  }
+  
+  .stat-item {
+    text-align: center;
+    font-weight: 600;
+  }
+  
+  .stat-item i {
+    font-size: 1.2rem;
+    margin-right: 6px;
+  }
+  
+  .stat-item span {
+    display: block;
+    font-size: 1.2rem;
+  }
+  
+  .stat-item label {
+    font-size: 0.9rem;
+    color: #777;
+  }
+  
+  /* Sticky Nav */
+  .sticky-nav {
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 12px 0;
+    margin-bottom: 30px;
+  }
+  
+  .sticky-nav .nav-link {
+    font-weight: 600;
+    padding: 8px 20px;
+  }
+  
+  .sticky-nav .btn.share-btn {
+    margin-left: 20px;
+    font-weight: 600;
+  }
+  
+  /* Categories */
+  .categories-section h2 {
+    font-size: 1.6rem;
+    margin-bottom: 20px;
+  }
+  
+  .category-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 40px;
+  }
+  
+  .category-pill {
+    border-radius: 50px;
+  }
+  
+  /* Featured Recipes */
+  .featured-section h2 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+  }
+  
+  .recipe-card {
+    margin-bottom: 30px;
+    border: none;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.07);
+    transition: all 0.3s ease;
+  }
+  
+  .recipe-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  
+  .card-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+  }
+  
+  .card-image-wrapper img {
+    height: 220px;
+    object-fit: cover;
+  }
+  
+  .card-category {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(255, 255, 255, 0.85);
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    border-radius: 12px;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    color: #666;
+  }
+  
+  .card-meta i {
+    margin-right: 6px;
+  }
+  
+  /* Discussions */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  
+  .discussion-card {
+    margin-bottom: 20px;
+    border: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .discussion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .discussion-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    color: #888;
+  }
+  
+  /* Members */
+  .members-section h2 {
+    margin-bottom: 30px;
+  }
+  
+  .member-card {
+    margin-bottom: 20px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  }
+  
+  .member-card img {
+    object-fit: cover;
+    height: 180px;
+  }
+  

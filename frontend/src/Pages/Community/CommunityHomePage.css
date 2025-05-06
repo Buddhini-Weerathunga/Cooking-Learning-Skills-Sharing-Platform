@@ -138,6 +138,44 @@
 }
 
 /* Add responsive styles */
+
+/* Hover Animation for Nav Items */
+.nav-animated .nav-link {
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.nav-animated .nav-link:hover {
+  background-color: #e55b00 !important;
+  color: #fff !important;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 106, 0, 0.3);
+}
+/* Hover Animation for Nav Items */
+.nav-animated .nav-link {
+  transition: all 0.3s ease;
+  transform: scale(1);
+}
+
+.nav-animated .nav-link:hover {
+  background-color: #e55b00 !important;
+  color: #3b3a3a !important;
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(255, 106, 0, 0.3);
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 @media (max-width: 768px) {
   .hero-banner {
     height: 300px;
@@ -241,7 +279,7 @@
 .sticky-nav {
   position: sticky;
   top: 60px;
-  background: white;
+  background: rgba(255, 255, 255, 0.381);
   padding: 1rem 0;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
   z-index: 100;
@@ -254,7 +292,7 @@
 
 .category-pills {
   display: flex;
-  gap: 1rem;
+  gap: 3rem;
   flex-wrap: wrap;
   margin: 1rem 0;
 }
@@ -267,11 +305,12 @@
 /* Recipe Cards */
 .recipe-card {
   margin-bottom: 2rem;
-  border: none;
-  border-radius: 15px;
+  border:#666;
+  border-radius: 25px;
   overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
   transition: transform 0.3s ease;
+  max-height: 700px;
 }
 
 .recipe-card:hover {

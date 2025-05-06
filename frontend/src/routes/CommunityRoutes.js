@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import CommunityHome from '../Pages/Community/CommunityHome';
-import GroupDetail from '../Pages/Community/GroupDetail';
+import GroupDetail from '../Pages/Community/CommunityHomePage';
 import CreateGroup from '../Pages/Community/CreateGroup';
 import GroupDiscussions from '../Pages/Community/GroupDiscussions';
 import GroupPosts from '../Pages/Community/GroupPosts';

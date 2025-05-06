@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Nav, Button, Card, Carousel, Modal } from 'react-bootstrap';
 import { mockGroups, mockDiscussions } from './mockData';
 import './GroupDetail.css';
 import RecipeForm from './components/RecipeForm';
 import DiscussionForm from './components/DiscussionForm';
 import CommentForm from './components/CommentForm';
+
+import sourdoughImg from '../../assets/images/recipes/sourdough-bread.jpeg';
+import croissantsImg from '../../assets/images/recipes/croissants.jpeg';
+import macaronsImg from '../../assets/images/recipes/french-baguettes.jpeg';
+import banner1 from '../../assets/images/banners/bread-banner.jpeg';
+import banner2 from '../../assets/images/banners/pastry-banner.jpeg';
+import banner3 from '../../assets/images/banners/baking-banner.jpeg';
 
 const GroupDetail = () => {
   const { groupId } = useParams();
@@ -18,31 +25,29 @@ const GroupDetail = () => {
   const [editingRecipe, setEditingRecipe] = useState(null);
   const [editingDiscussion, setEditingDiscussion] = useState(null);
 
-  // Banner carousel images
   const bannerImages = [
     {
-      url: '/images/baking-banner1.jpg',
+      url: banner1,
       title: 'Artisan Baking',
       description: 'Master the art of bread making'
     },
     {
-      url: '/images/baking-banner2.jpg',
+      url: banner2,
       title: 'Pastry Perfection',
       description: 'Create beautiful pastries'
     },
     {
-      url: '/images/baking-banner3.jpg',
+      url: banner3,
       title: 'Sweet Creations',
       description: 'Explore dessert making'
     }
   ];
 
-  // Featured recipes/posts
   const featuredItems = [
     {
       id: 1,
       title: 'Artisan Sourdough Bread',
-      image: '/images/sourdough.jpg',
+      image: sourdoughImg,
       author: 'Jane Smith',
       likes: 156,
       category: 'Bread'
@@ -50,15 +55,15 @@ const GroupDetail = () => {
     {
       id: 2,
       title: 'Perfect Croissants',
-      image: '/images/croissants.jpg',
+      image: croissantsImg,
       author: 'Mike Johnson',
       likes: 142,
       category: 'Pastries'
     },
     {
       id: 3,
-      title: 'French Macarons',
-      image: '/images/macarons.jpg',
+      title: 'French Baguettes',
+      image: macaronsImg,
       author: 'Sarah Wilson',
       likes: 198,
       category: 'Desserts'
@@ -70,15 +75,12 @@ const GroupDetail = () => {
     setGroup(foundGroup);
   }, [groupId]);
 
-  // Recipe handlers
   const handleCreateRecipe = (formData) => {
-    // TODO: Implement API call
     console.log('Creating recipe:', formData);
     setShowRecipeForm(false);
   };
 
   const handleUpdateRecipe = (formData) => {
-    // TODO: Implement API call
     console.log('Updating recipe:', formData);
     setShowRecipeForm(false);
     setEditingRecipe(null);
@@ -86,20 +88,16 @@ const GroupDetail = () => {
 
   const handleDeleteRecipe = (recipeId) => {
     if (window.confirm('Are you sure you want to delete this recipe?')) {
-      // TODO: Implement API call
       console.log('Deleting recipe:', recipeId);
     }
   };
 
-  // Discussion handlers
   const handleCreateDiscussion = (formData) => {
-    // TODO: Implement API call
     console.log('Creating discussion:', formData);
     setShowDiscussionForm(false);
   };
 
   const handleUpdateDiscussion = (formData) => {
-    // TODO: Implement API call
     console.log('Updating discussion:', formData);
     setShowDiscussionForm(false);
     setEditingDiscussion(null);
@@ -107,14 +105,11 @@ const GroupDetail = () => {
 
   const handleDeleteDiscussion = (discussionId) => {
     if (window.confirm('Are you sure you want to delete this discussion?')) {
-      // TODO: Implement API call
       console.log('Deleting discussion:', discussionId);
     }
   };
 
-  // Comment handlers
   const handleCreateComment = (content, parentId = null) => {
-    // TODO: Implement API call
     console.log('Creating comment:', content, 'for parent:', parentId);
   };
 
@@ -122,7 +117,6 @@ const GroupDetail = () => {
 
   return (
     <div className="group-detail-page">
-      {/* Hero Carousel Section */}
       <Carousel className="hero-carousel">
         {bannerImages.map((image, index) => (
           <Carousel.Item key={index}>
@@ -141,7 +135,6 @@ const GroupDetail = () => {
         ))}
       </Carousel>
 
-      {/* Group Info Section */}
       <Container className="group-info-section">
         <Row>
           <Col md={8}>
@@ -165,39 +158,25 @@ const GroupDetail = () => {
         </Row>
       </Container>
 
-      {/* Navigation Section */}
       <div className="sticky-nav">
         <Container>
           <Nav variant="pills" className="justify-content-center" activeKey={activeTab}>
             <Nav.Item>
-              <Nav.Link 
-                eventKey="recipes" 
-                onClick={() => setActiveTab('recipes')}
-              >
+              <Nav.Link eventKey="recipes" onClick={() => setActiveTab('recipes')}>
                 <i className="fas fa-utensils"></i> Recipes
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link 
-                eventKey="discussions" 
-                onClick={() => setActiveTab('discussions')}
-              >
+              <Nav.Link eventKey="discussions" onClick={() => setActiveTab('discussions')}>
                 <i className="fas fa-comments"></i> Discussions
               </Nav.Link>
             </Nav.Item>
             <Nav.Item>
-              <Nav.Link 
-                eventKey="members" 
-                onClick={() => setActiveTab('members')}
-              >
+              <Nav.Link eventKey="members" onClick={() => setActiveTab('members')}>
                 <i className="fas fa-users"></i> Members
               </Nav.Link>
             </Nav.Item>
-            <Button 
-              variant="primary" 
-              className="share-btn"
-              onClick={() => setShowShareModal(true)}
-            >
+            <Button variant="primary" className="share-btn" onClick={() => setShowShareModal(true)}>
               <i className="fas fa-plus"></i> Share Recipe
             </Button>
           </Nav>
@@ -207,23 +186,17 @@ const GroupDetail = () => {
       <Container className="main-content">
         {activeTab === 'recipes' && (
           <>
-            {/* Categories Section */}
             <section className="categories-section">
               <h2>Recipe Categories</h2>
               <div className="category-pills">
                 {['All', 'Bread', 'Pastries', 'Desserts', 'Cakes', 'Cookies'].map(category => (
-                  <Button 
-                    key={category} 
-                    variant="outline-primary" 
-                    className="category-pill"
-                  >
+                  <Button key={category} variant="outline-primary" className="category-pill">
                     {category}
                   </Button>
                 ))}
               </div>
             </section>
 
-            {/* Featured Recipes */}
             <section className="featured-section">
               <h2>Featured Recipes</h2>
               <Row>
@@ -309,17 +282,15 @@ const GroupDetail = () => {
         )}
       </Container>
 
-      {/* Share Recipe Modal */}
       <Modal show={showShareModal} onHide={() => setShowShareModal(false)} size="lg">
         <Modal.Header closeButton>
           <Modal.Title>Share Your Recipe</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Add your recipe form here */}
+          {/* Optional form content here */}
         </Modal.Body>
       </Modal>
 
-      {/* Recipe Form Modal */}
       <RecipeForm
         show={showRecipeForm}
         handleClose={() => {
@@ -330,7 +301,6 @@ const GroupDetail = () => {
         initialData={editingRecipe}
       />
 
-      {/* Discussion Form Modal */}
       <DiscussionForm
         show={showDiscussionForm}
         handleClose={() => {
@@ -344,4 +314,4 @@ const GroupDetail = () => {
   );
 };
 
-export default GroupDetail; 
+export default GroupDetail;

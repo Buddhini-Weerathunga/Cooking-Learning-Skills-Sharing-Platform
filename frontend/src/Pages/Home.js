@@ -56,7 +56,7 @@ const HomePage = () => {
           <br />
           <button
             type="button"
-            class="btn  bg-lg"
+            className="btn bg-lg"
             style={{
               height: "50px",
               width: "150px",

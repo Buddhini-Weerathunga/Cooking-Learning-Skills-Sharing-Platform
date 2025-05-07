@@ -17,18 +17,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // Important for Postman & frontend dev
+            .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/courses/**").permitAll() // 👈 temporarily open this
-            .requestMatchers("/api/items/**").permitAll()
-            .requestMatchers("/api/posts/**").permitAll() 
-            .requestMatchers("/api/certifications/**").permitAll()
-            .requestMatchers("/api/communities/**").permitAll() // 👈 temporarily open this
-            .anyRequest().authenticated()
-        )
-            .cors(cors -> {}); // Enable CORS if you're using frontend like React
-
+                .anyRequest().permitAll()
+            )
+            .cors(cors -> {});
         return http.build();
     }
 

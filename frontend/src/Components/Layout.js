@@ -6,7 +6,7 @@ import Footer from "./Footer";
 const Layout = ({ children }) => (
   <div>
     <Navbar />
-    <main style={{ minHeight: "80vh", paddingTop: "130px" }}>{children}</main>
+    <main style={{ minHeight: 0, paddingTop: "70px", paddingBottom: 0 }}>{children}</main>
     <Footer />
   </div>
 );

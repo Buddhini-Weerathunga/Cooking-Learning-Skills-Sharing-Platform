@@ -58,6 +58,11 @@ function Navbar() {
               </a>
             </li>
             <li className="nav-item">
+              <Link to="/community" className="nav-link">
+                Community
+              </Link>
+            </li>
+            <li className="nav-item">
               <a className="nav-link" href="">
                 Feedbacks
               </a>

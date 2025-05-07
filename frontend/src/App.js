@@ -8,10 +8,15 @@ import Footer from "./Components/Footer";
 import Login from "./Pages/Login";
 import Register from "./Pages/Register";
 import StudentDashboard from "./Pages/StudentDashboard";
-import ListPost from "./Pages/Posts/ListPost";
+
 import Dashboard from "./Pages/Dashboard";
+import ListPost from "./Pages/Posts/ListPost";
+
 import CreatePost from "./Pages/Posts/CreatePost";
 import UpdatePost from "./Pages/Posts/UpdatePost";
+import ViewPost from "./Pages/Posts/ViewPost";
+import PostFeed from './Pages/Posts/PostFeed';
+
 import CreateCommunityGroup from "./Pages/Admin/CommunityGroup/Create";
 import InstructorDashboard from "./Pages/InstructorDashboard";
 import CertificationList from "./Pages/Certifications/list";
@@ -34,9 +39,12 @@ function App() {
 
           <Route path="/instructor" element={<Dashboard />} />
 
-          <Route path="/post/list" element={<ListPost />} />
+          
+           
+          <Route path="/post/list" element={<PostFeed />} />
           <Route path="/post/create" element={<CreatePost />} />
-          <Route path="/post/update/:id" element={<UpdatePost />} />
+          <Route path="/post/update" element={<UpdatePost />} />
+          <Route path="/post/view" element={<ViewPost />} />
           <Route
             path="/community-group/create"
             element={<CreateCommunityGroup />}

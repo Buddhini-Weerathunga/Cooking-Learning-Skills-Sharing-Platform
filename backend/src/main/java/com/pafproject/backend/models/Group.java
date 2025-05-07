@@ -1,84 +1,60 @@
 package com.pafproject.backend.models;
 
 import jakarta.persistence.*;
+import java.sql.Timestamp;
 
 @Entity
-@Table(name = "groups") // Use "groups" as the table name in the database
+@Table(name = "groups")
 public class Group {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
+
+    @Column(columnDefinition = "TEXT")
     private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "creator_id", nullable = false)
-    private User creator;  // This field represents the user who created the group
-
-    // New fields for category, group rules, and privacy
     private String category;
-    
-    @Column(length = 1000) // Assuming rules are a large text field
+
+    @Column(name = "group_rules", columnDefinition = "TEXT")
     private String groupRules;
 
-    private Boolean privateGroup; // Represents if the group is private
+    @Column(name = "private_group")
+    private Boolean privateGroup = false;
 
-    // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    @Column(name = "created_at", updatable = false, insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
+    private Timestamp createdAt;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @Column(name = "updated_at", insertable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP")
+    private Timestamp updatedAt;
 
-    public String getName() {
-        return name;
-    }
+    @Column(name = "creator_id")
+    private Long creatorId;
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    @Column(name = "member_count")
+    private Integer memberCount = 0;
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public User getCreator() {
-        return creator;
-    }
-
-    public void setCreator(User creator) {
-        this.creator = creator;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getGroupRules() {
-        return groupRules;
-    }
-
-    public void setGroupRules(String groupRules) {
-        this.groupRules = groupRules;
-    }
-
-    public Boolean getPrivateGroup() {
-        return privateGroup;
-    }
-
-    public void setPrivateGroup(Boolean privateGroup) {
-        this.privateGroup = privateGroup;
-    }
-}
+    // Getters and setters...
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getName() { return name; }
+    public void setName(String name) { this.name = name; }
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+    public String getCategory() { return category; }
+    public void setCategory(String category) { this.category = category; }
+    public String getGroupRules() { return groupRules; }
+    public void setGroupRules(String groupRules) { this.groupRules = groupRules; }
+    public Boolean getPrivateGroup() { return privateGroup; }
+    public void setPrivateGroup(Boolean privateGroup) { this.privateGroup = privateGroup; }
+    public Timestamp getCreatedAt() { return createdAt; }
+    public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }
+    public Timestamp getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(Timestamp updatedAt) { this.updatedAt = updatedAt; }
+    public Long getCreatorId() { return creatorId; }
+    public void setCreatorId(Long creatorId) { this.creatorId = creatorId; }
+    public Integer getMemberCount() { return memberCount; }
+    public void setMemberCount(Integer memberCount) { this.memberCount = memberCount; }
+} 

@@ -29,27 +29,28 @@ const PostForm = ({ show, handleClose, handleSubmit, initialData = null }) => {
   };
 
   return (
-    <Modal show={show} onHide={handleClose} size="lg">
-      <Modal.Header closeButton>
-        <Modal.Title>
+    <Modal show={show} onHide={handleClose} size="lg" centered>
+      <Modal.Header closeButton style={{ background: '#fff8f0', borderBottom: '2px solid #ffb74d', borderTopLeftRadius: 20, borderTopRightRadius: 20 }}>
+        <Modal.Title style={{ color: '#ff9800', fontWeight: 700, fontSize: 28, letterSpacing: 1 }}>
           {initialData ? 'Edit Post' : 'Create New Post'}
         </Modal.Title>
       </Modal.Header>
-      <Modal.Body>
+      <Modal.Body style={{ background: '#fffdf7', borderBottomLeftRadius: 20, borderBottomRightRadius: 20, padding: '2.5rem 2rem' }}>
         <Form onSubmit={onSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Title</Form.Label>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold" style={{ color: '#ff9800', fontSize: 18 }}>Title</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter post title"
               value={formData.title}
               onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               required
+              style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 18 }}
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Content</Form.Label>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold" style={{ color: '#ff9800', fontSize: 18 }}>Content</Form.Label>
             <Form.Control
               as="textarea"
               rows={5}
@@ -57,25 +58,28 @@ const PostForm = ({ show, handleClose, handleSubmit, initialData = null }) => {
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               required
+              style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 18 }}
             />
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Image (optional)</Form.Label>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold" style={{ color: '#ff9800', fontSize: 18 }}>Image (optional)</Form.Label>
             <Form.Control
               type="file"
               accept="image/*"
               onChange={handleImageChange}
+              style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 16 }}
             />
             {imagePreview && (
-              <div className="mt-2">
-                <Image src={imagePreview} alt="Preview" style={{ maxWidth: '200px' }} />
+              <div className="mt-3 d-flex flex-column align-items-center">
+                <Image src={imagePreview} alt="Preview" style={{ maxWidth: '260px', borderRadius: 14, border: '2px solid #ffb74d', boxShadow: '0 2px 8px 0 rgba(255,152,0,0.10)' }} />
+                <span className="text-muted mt-2" style={{ fontSize: 14 }}>Image Preview</span>
               </div>
             )}
           </Form.Group>
 
-          <Form.Group className="mb-3">
-            <Form.Label>Tags (optional)</Form.Label>
+          <Form.Group className="mb-4">
+            <Form.Label className="fw-bold" style={{ color: '#ff9800', fontSize: 18 }}>Tags (optional)</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter tags separated by commas"
@@ -84,14 +88,15 @@ const PostForm = ({ show, handleClose, handleSubmit, initialData = null }) => {
                 ...formData, 
                 tags: e.target.value.split(',').map(tag => tag.trim()).filter(Boolean)
               })}
+              style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 18 }}
             />
           </Form.Group>
 
-          <div className="d-flex justify-content-end gap-2">
-            <Button variant="secondary" onClick={handleClose}>
+          <div className="d-flex justify-content-end gap-3 mt-4">
+            <Button onClick={handleClose} style={{ background: '#ff9800', border: 'none', fontWeight: 600, fontSize: 18, borderRadius: 10, padding: '10px 32px' }}>
               Cancel
             </Button>
-            <Button variant="primary" type="submit">
+            <Button type="submit" style={{ background: '#0288d1', border: 'none', fontWeight: 600, fontSize: 18, borderRadius: 10, padding: '10px 32px' }}>
               {initialData ? 'Update Post' : 'Create Post'}
             </Button>
           </div>

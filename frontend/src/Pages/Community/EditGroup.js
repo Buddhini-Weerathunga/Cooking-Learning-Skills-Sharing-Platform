@@ -1,27 +1,24 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { Container, Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate, Link } from 'react-router-dom';
-import axios from 'axios';
 
-const CreateGroup = () => {
+const EditGroup = () => {
+  const { groupId } = useParams();
+  const [form, setForm] = useState(null);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [form, setForm] = useState({
-    name: '',
-    description: '',
-    category: '',
-    groupRules: '',
-    privateGroup: false,
-    creatorId: '',
-    memberCount: 1,
-  });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get(`http://localhost:8080/api/groups/${groupId}`).then((res) => setForm(res.data));
+  }, [groupId]);
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -29,34 +26,19 @@ const CreateGroup = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-    
     try {
-      console.log('Submitting group data:', form);
-      
-      await axios.post('http://localhost:8080/api/groups', form);
-      
-      console.log('Group created successfully');
-      
-      navigate('/community');
-    } catch (error) {
-      console.error('Error creating group:', error);
-      console.error('Error details:', {
-        message: error.message,
-        response: error.response?.data,
-        status: error.response?.status
-      });
-      
-      if (error.response?.status === 500) {
-        setError('Database error. Please make sure the database is running and properly configured.');
-      } else if (error.response?.status === 404) {
-        setError('Server endpoint not found. Please check if the backend server is running.');
-      } else {
-        setError(error.response?.data?.message || 'Failed to create group. Please try again later.');
-      }
+      await axios.put(`http://localhost:8080/api/groups/${groupId}`, form);
+      window.dispatchEvent(new Event('groupsUpdated'));
+      localStorage.setItem('groupEditSuccess', 'true');
+      navigate('/community/groups');
+    } catch (err) {
+      setError('Failed to update group. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
+
+  if (!form) return <div>Loading...</div>;
 
   return (
     <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #fff7e6 0%, #ffe0b2 100%)', paddingTop: '80px' }}>
@@ -66,7 +48,7 @@ const CreateGroup = () => {
             <div className="card shadow-lg" style={{ borderRadius: 24, border: 'none', background: '#fff8f0' }}>
               <div className="card-body p-5">
                 <h2 className="text-center mb-4 fw-bold" style={{ color: '#ff9800', fontSize: 38, letterSpacing: 1 }}>
-                  <span role="img" aria-label="chef hat" style={{ fontSize: 40, verticalAlign: 'middle' }}>🍳</span> Create New Group
+                  <span role="img" aria-label="chef hat" style={{ fontSize: 40, verticalAlign: 'middle' }}>🍳</span> Edit Group
                 </h2>
                 {error && <Alert variant="danger">{error}</Alert>}
                 <Form onSubmit={handleSubmit}>
@@ -104,9 +86,9 @@ const CreateGroup = () => {
                       value={form.category}
                       onChange={handleChange}
                       disabled={loading}
-                      style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 18 }}
+                      style={{ borderRadius: 12, border: '1.5px solid #ffb74d', fontSize: 18, color: form.category === '' ? '#888' : '#212529' }}
                     >
-                      <option value="">Select a category</option>
+                      <option value="" disabled>Select a category</option>
                       <option value="Cooking">Cooking</option>
                       <option value="Baking">Baking</option>
                       <option value="Food Photography">Food Photography</option>
@@ -142,45 +124,24 @@ const CreateGroup = () => {
                     />
                   </Form.Group>
                   <div className="d-grid gap-2">
-                    <Button 
+                    <Button
                       style={{ background: '#ff9800', border: 'none', fontWeight: 600, fontSize: 20, borderRadius: 12, padding: '12px 0' }}
-                      type="submit" 
+                      type="submit"
                       size="lg"
                       disabled={loading}
-                      className="create-btn"
+                      className="save-btn"
                     >
-                      {loading ? 'Creating...' : 'Create Group'}
+                      {loading ? 'Saving...' : 'Save Changes'}
                     </Button>
-                    <Button 
+                    <Button
                       style={{ background: '#757575', color: '#fff', fontWeight: 700, fontSize: 18, borderRadius: 10, padding: '10px 0', border: 'none' }}
-                      onClick={() => navigate('/community/groups')}
+                      onClick={() => navigate(`/community/groups/${groupId}`)}
                       size="lg"
                       disabled={loading}
                       className="cancel-btn"
                     >
                       Cancel
                     </Button>
-                    <Link to="/community/groups" className="d-inline-block">
-                      <Button 
-                        variant="warning" 
-                        size="sm" 
-                        className="mt-2 fw-bold shadow-sm view-groups-btn"
-                        disabled={loading}
-                        style={{ 
-                          fontWeight: 700, 
-                          fontSize: 15, 
-                          borderRadius: 8, 
-                          padding: '6px 18px', 
-                          background: '#ff9800', 
-                          color: '#fff', 
-                          border: 'none', 
-                          letterSpacing: 1,
-                          boxShadow: '0 2px 8px 0 rgba(255,152,0,0.10)'
-                        }}
-                      >
-                        <span role="img" aria-label="groups" style={{ marginRight: 6 }}>👥</span> View Groups
-                      </Button>
-                    </Link>
                   </div>
                 </Form>
               </div>
@@ -189,7 +150,7 @@ const CreateGroup = () => {
         </div>
       </Container>
       <style>{`
-        .create-btn:hover {
+        .save-btn:hover {
           background: #e65100 !important;
           color: #fff !important;
         }
@@ -197,13 +158,9 @@ const CreateGroup = () => {
           background: #424242 !important;
           color: #fff !important;
         }
-        .view-groups-btn:hover {
-          background: #e65100 !important;
-          color: #fff !important;
-        }
       `}</style>
     </div>
   );
 };
 
-export default CreateGroup; 
+export default EditGroup; 

@@ -1,168 +1,141 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const Home = () => {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [category, setCategory] = useState("");
-  const [groupRules, setGroupRules] = useState("");
-  const [privateGroup, setPrivateGroup] = useState(false);
-  const [groupId, setGroupId] = useState(null); // For Update: store the group ID
-  const [groupData, setGroupData] = useState(null); // For displaying the group data after creation or update
+const CommunityHome = () => {
+  const [groups, setGroups] = useState([]);
+  const [showEditSuccess, setShowEditSuccess] = useState(false);
 
-  // Handle the form submission (for Create and Update)
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const groupData = {
-      name: name,
-      description: description,
-      category: category,
-      groupRules: groupRules,
-      privateGroup: privateGroup,
-    };
-
-    let url = "http://localhost:8080/api/groups/create?username=johndoe"; // Default Create URL
-    let method = "POST"; // Default method for Create
-
-    // If there's a groupId, it's an update request
-    if (groupId) {
-      url = `http://localhost:8080/api/groups/update/${groupId}`;
-      method = "PUT";
-    }
-
-    try {
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(groupData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setGroupData(data); // Store the response data
-        console.log(groupId ? "Group updated:" : "Group created:", data);
-      } else {
-        console.log("Error:", data); // Handle error
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+  const fetchGroups = () => {
+    axios.get("http://localhost:8080/api/groups").then((res) => setGroups(res.data));
   };
 
-  // Handle form reset after successful submission
-  const resetForm = () => {
-    setName("");
-    setDescription("");
-    setCategory("");
-    setGroupRules("");
-    setPrivateGroup(false);
-    setGroupId(null); // Reset groupId after a successful update
-  };
+  useEffect(() => {
+    fetchGroups();
+    // Listen for the custom event to refresh groups after edit
+    const handler = () => fetchGroups();
+    window.addEventListener('groupsUpdated', handler);
+    // Show success alert if redirected from edit
+    if (localStorage.getItem('groupEditSuccess')) {
+      setShowEditSuccess(true);
+      localStorage.removeItem('groupEditSuccess');
+      setTimeout(() => setShowEditSuccess(false), 3000);
+    }
+    return () => window.removeEventListener('groupsUpdated', handler);
+  }, []);
 
-  // Handle Update functionality (if needed)
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-
-    const groupData = {
-      name: name,
-      description: description,
-      category: category,
-      groupRules: groupRules,
-      privateGroup: privateGroup,
-    };
-
-    try {
-      const response = await fetch(`http://localhost:8080/api/groups/update/${groupId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(groupData),
-      });
-
-      const data = await response.json();
-      if (response.ok) {
-        setGroupData(data); // Store the updated group data
-        console.log("Group updated:", data); // Success!
-      } else {
-        console.log("Error updating group:", data); // Handle error
-      }
-    } catch (error) {
-      console.error("Error:", error);
+  const handleDelete = async (groupId) => {
+    if (window.confirm("Are you sure you want to delete this group?")) {
+      await axios.delete(`http://localhost:8080/api/groups/${groupId}`);
+      setGroups((prev) => prev.filter((g) => g.id !== groupId));
     }
   };
 
   return (
-    <div className="container">
-      <h2>{groupId ? "Update Group" : "Create a New Group"}</h2>
-      <form onSubmit={handleSubmit}>
-        <div className="form-group">
-          <label>Group Name</label>
-          <input
-            type="text"
-            className="form-control"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+    <div style={{ minHeight: "100vh", background: "linear-gradient(135deg, #fff7e6 0%, #ffe0b2 100%)", paddingTop: "90px" }}>
+      <div className="container py-5">
+        <div className="text-center mb-5">
+          <h1 className="display-4 fw-bold" style={{ color: "#ff9800", letterSpacing: 1 }}>
+            <span role="img" aria-label="chef hat" style={{ fontSize: 40, verticalAlign: "middle" }}>
+              🍳
+            </span>{" "}
+            Easy Chef Community Groups
+          </h1>
+          <p className="lead" style={{ color: "#795548" }}>
+            Discover, join, and create groups to share your cooking passion!
+          </p>
         </div>
-        <div className="form-group">
-          <label>Description</label>
-          <textarea
-            className="form-control"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
+        {showEditSuccess && (
+          <div className="alert alert-success text-center fw-bold">Group updated successfully!</div>
+        )}
+        <div className="d-flex justify-content-end align-items-center mb-4">
+          <Link to="/community/groups/create">
+            <button className="btn btn-lg btn-warning shadow-sm fw-bold">
+              + Create New Group
+            </button>
+          </Link>
         </div>
-        <div className="form-group">
-          <label>Category</label>
-          <input
-            type="text"
-            className="form-control"
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Group Rules</label>
-          <textarea
-            className="form-control"
-            value={groupRules}
-            onChange={(e) => setGroupRules(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Private Group</label>
-          <input
-            type="checkbox"
-            className="form-check-input"
-            checked={privateGroup}
-            onChange={() => setPrivateGroup(!privateGroup)}
-          />
-        </div>
-        <button type="submit" className="btn btn-primary">
-          {groupId ? "Update Group" : "Create Group"}
-        </button>
-      </form>
-
-      {groupData && (
-        <div>
-          <h3>{groupId ? "Updated" : "Created"} Group Details</h3>
-          <p>Group Name: {groupData.name}</p>
-          <p>Category: {groupData.category}</p>
-          <p>Description: {groupData.description}</p>
-          <p>Group Rules: {groupData.groupRules}</p>
-          <p>Private: {groupData.privateGroup ? "Yes" : "No"}</p>
-        </div>
-      )}
+        {groups.length === 0 ? (
+          <div className="alert alert-info text-center">No groups found. Be the first to create one!</div>
+        ) : (
+          <div className="row g-4">
+            {groups.map((g) => (
+              <div className="col-md-6 col-lg-4" key={g.id}>
+                <div className="card h-100 shadow group-card" style={{ border: "none", borderRadius: 24, minHeight: 320, transition: "transform 0.2s, box-shadow 0.2s" }}>
+                  <div className="card-body d-flex flex-column p-4 group-card-bg">
+                    <h5 className="card-title fw-bold" style={{ color: "#ff9800", fontSize: 28 }}>{g.name}</h5>
+                    <p className="card-text text-truncate" style={{ color: "#6d4c41", fontSize: 18 }}>{g.description}</p>
+                    <span className="badge bg-secondary mb-2 category-badge" style={{ background: "#ffe0b2", color: "#ff9800" }}>{g.category || "No Category"}</span>
+                    <div className="mt-auto d-flex flex-column gap-2 align-items-center">
+                      <Link to={`/community/groups/${g.id}`} className="btn view-btn mb-1 fw-bold" style={{ fontSize: 16, maxWidth: 220 }}>
+                        View Details
+                      </Link>
+                      <div className="d-flex gap-2 justify-content-center">
+                        <Link to={`/community/groups/${g.id}/edit`} className="btn edit-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }}>
+                          Edit
+                        </Link>
+                        <button className="btn delete-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }} onClick={() => handleDelete(g.id)}>
+                          Delete
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <style>{`
+        .group-card {
+          /* ...existing styles... */
+        }
+        .group-card-bg {
+          background: #ffe0b2 !important;
+          border-radius: 18px !important;
+          border: 1.5px solid #ffb74d !important;
+        }
+        .group-card:hover {
+          transform: translateY(-6px) scale(1.03);
+          box-shadow: 0 8px 32px 0 rgba(255, 152, 0, 0.15);
+        }
+        .category-badge {
+          font-size: 18px !important;
+          padding: 10px 26px !important;
+          border-radius: 14px !important;
+          font-weight: 600 !important;
+        }
+        .view-btn {
+          background: #ff9800 !important;
+          color: #fff !important;
+          border: none !important;
+        }
+        .view-btn:hover {
+          background: #f57c00 !important;
+          color: #fff !important;
+        }
+        .edit-btn {
+          background: #0288d1 !important;
+          color: #fff !important;
+          border: none !important;
+        }
+        .edit-btn:hover {
+          background: #01579b !important;
+          color: #fff !important;
+        }
+        .delete-btn {
+          background: #d32f2f !important;
+          color: #fff !important;
+          border: none !important;
+        }
+        .delete-btn:hover {
+          background: #b71c1c !important;
+          color: #fff !important;
+        }
+      `}</style>
     </div>
   );
 };
 
-export default Home;
+export default CommunityHome;

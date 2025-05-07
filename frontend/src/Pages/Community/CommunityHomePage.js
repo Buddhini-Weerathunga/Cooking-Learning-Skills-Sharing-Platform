@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { Container, Row, Col, Nav, Button, Card, Carousel, Modal } from 'react-bootstrap';
 import { mockGroups, mockDiscussions } from './mockData';
 import './CommunityHomePage.css';
@@ -16,9 +16,7 @@ import banner3 from '../../assets/images/banners/baking-banner.jpeg';
 import bakingTexture from '../../assets/images/banners/baking-texture.png';
 
 const CommunityHomePage = () => {
-  const { groupId } = useParams();
   const navigate = useNavigate();
-  const [group, setGroup] = useState(null);
   const [activeTab, setActiveTab] = useState('recipes');
   const [showShareModal, setShowShareModal] = useState(false);
   const [showRecipeForm, setShowRecipeForm] = useState(false);
@@ -38,15 +36,8 @@ const CommunityHomePage = () => {
     { id: 3, title: 'French Baguettes', image: macaronsImg, author: 'Sarah Wilson', likes: 198, category: 'Desserts' }
   ];
 
-  useEffect(() => {
-    const foundGroup = mockGroups.find(g => g.id === groupId);
-    setGroup(foundGroup);
-  }, [groupId]);
-
-  if (!group) return <div>Loading...</div>;
-
   return (
-    <div className="group-detail-page">
+    <div className="group-detail-page" style={{ minHeight: '100vh', background: '#faf6f1', paddingTop: 0, paddingBottom: 0, marginTop: 0, marginBottom: 0 }}>
       <Carousel className="hero-carousel" interval={2000} pause={false}>
         {bannerImages.map((image, index) => (
           <Carousel.Item key={index}>
@@ -75,7 +66,7 @@ const CommunityHomePage = () => {
         <Container fluid>
           <Row>
             <Col md={8}>
-              <h1 style={{ color: '#ff6a00', fontWeight: 'bold', fontSize: '2.8rem', animation: 'fadeInDown 1s ease' }}>{group.name}</h1>
+              <h1 style={{ color: '#ff6a00', fontWeight: 'bold', fontSize: '2.8rem', animation: 'fadeInDown 1s ease' }}>Welcome to the Easy Chef Community!</h1>
               <p className="lead" style={{ fontSize: '1.2rem', fontStyle: 'italic', color: 'grey', fontWeight: '500' }}>
                 👨‍🍳 A vibrant space to exchange baking secrets, share delicious recipes, and connect with fellow baking lovers! 
                 Whether you're a beginner or a seasoned pro, this community is the perfect place to rise together and make baking even sweeter.
@@ -85,8 +76,8 @@ const CommunityHomePage = () => {
               <div className="group-stats">
                 <div className="stat-item">
                   <i className="fas fa-users"></i>
-                  <span><i className="fas fa-user-friends me-1"></i>{group.members?.length || group.memberCount}</span>
-                  <label>Members</label>
+                  <span><i className="fas fa-user-friends me-1"></i>{mockGroups.length}</span>
+                  <label>Groups</label>
                 </div>
                 <div className="stat-item">
                   <i className="fas fa-book-open"></i>
@@ -114,7 +105,7 @@ const CommunityHomePage = () => {
             <Nav.Item className="mx-4 nav-animated">
               <Nav.Link
                 eventKey="discussions"
-                href={`http://localhost:3000/community/groups/1/discussions`} // Updated Discussions URL
+                onClick={() => navigate('/community/groups/1/discussions')}
                 style={{ fontWeight: 'bold', color: 'black', backgroundColor: '#ff6a00', transition: 'all 0.3s ease', padding: '6px 16px', borderRadius: '8px' }}
               >
                 Discussions
@@ -122,8 +113,9 @@ const CommunityHomePage = () => {
             </Nav.Item>
             <Nav.Item className="mx-4 nav-animated">
               <Nav.Link
+                as={Link}
+                to="/community/groups/create"
                 eventKey="groups"
-                href={`http://localhost:3000/community/groups/create`} // Groups URL
                 style={{ fontWeight: 'bold', color: 'black', backgroundColor: '#ff6a00', transition: 'all 0.3s ease', padding: '6px 16px', borderRadius: '8px' }}
               >
                 Groups
@@ -132,7 +124,7 @@ const CommunityHomePage = () => {
             <Nav.Item className="mx-4 nav-animated">
               <Nav.Link
                 eventKey="posts"
-                href={`http://localhost:3000/community/groups/1/posts`} // Updated Posts URL
+                onClick={() => navigate('/community/groups/1/posts')}
                 style={{ fontWeight: 'bold', color: 'black', backgroundColor: '#ff6a00', transition: 'all 0.3s ease', padding: '6px 16px', borderRadius: '8px' }}
               >
                 Posts
@@ -142,9 +134,9 @@ const CommunityHomePage = () => {
         </Container>
       </div>
 
-      <div className="main-content" style={{ marginTop: '3rem' }}>
+      <div className="main-content" style={{ marginTop: '1rem', marginBottom: 0 }}>
         {activeTab === 'recipes' && (
-          <section className="featured-section" style={{ maxWidth: '1300px', margin: '0 auto', padding: '0 40px' }}>
+          <section className="featured-section" style={{ maxWidth: '1300px', margin: '0 auto', padding: '0 40px 1rem 40px' }}>
             <h2 className="text-center mb-4" style={{ fontWeight: '700', color: '#333' }}>Featured Recipes</h2>
             <Row>
               {featuredItems.map(item => (

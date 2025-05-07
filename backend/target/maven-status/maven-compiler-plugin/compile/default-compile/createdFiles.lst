@@ -1,7 +1,6 @@
 com\pafproject\backend\service\CertificationService.class
 com\pafproject\backend\models\User.class
 com\pafproject\backend\controller\AuthController.class
-com\pafproject\backend\models\CommunityGroup.class
 com\pafproject\backend\models\Group.class
 com\pafproject\backend\controller\ItemController.class
 com\pafproject\backend\models\Course.class
@@ -18,7 +17,6 @@ com\pafproject\backend\service\ItemService.class
 com\pafproject\backend\models\Item.class
 com\pafproject\backend\repository\CertificationRepository.class
 com\pafproject\backend\service\UserService.class
-com\pafproject\backend\service\CommunityGroupService.class
 com\pafproject\backend\repository\PostRepository.class
 com\pafproject\backend\service\PostService.class
 com\pafproject\backend\config\SecurityConfig.class
@@ -26,9 +24,7 @@ com\pafproject\backend\repository\GroupRepository.class
 com\pafproject\backend\controller\CourseController.class
 com\pafproject\backend\repository\CourseRepository.class
 com\pafproject\backend\models\Certification.class
-com\pafproject\backend\controller\CommunityGroupController.class
 com\pafproject\backend\controller\GroupController.class
 com\pafproject\exception\GlobalExceptionHandler.class
 com\pafproject\backend\controller\PostController.class
 com\pafproject\backend\service\CertificationServiceImpl.class
-com\pafproject\backend\repository\CommunityGroupRepository.class

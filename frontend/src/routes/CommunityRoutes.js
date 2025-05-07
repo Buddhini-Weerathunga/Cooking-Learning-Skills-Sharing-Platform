@@ -1,8 +1,9 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import CommunityHome from '../Pages/Community/CommunityHome';
-import GroupDetail from '../Pages/Community/CommunityHomePage';
+import CommunityHomePage from '../Pages/Community/CommunityHomePage';
+import GroupDetail from '../Pages/Community/GroupDetail';
 import CreateGroup from '../Pages/Community/CreateGroup';
+import EditGroup from '../Pages/Community/EditGroup';
 import GroupDiscussions from '../Pages/Community/GroupDiscussions';
 import GroupPosts from '../Pages/Community/GroupPosts';
 import GroupMembers from '../Pages/Community/GroupMembers';
@@ -13,11 +14,12 @@ const CommunityRoutes = () => {
   return (
     <Routes>
       {/* Main Community Routes */}
-      <Route path="/" element={<CommunityHome />} />
+      <Route index element={<CommunityHomePage />} />
       
       {/* Group Management Routes */}
       <Route path="/groups/create" element={<CreateGroup />} />
       <Route path="/groups/:groupId" element={<GroupDetail />} />
+      <Route path="/groups/:groupId/edit" element={<EditGroup />} />
       
       {/* Group Content Routes */}
       <Route path="/groups/:groupId/discussions" element={<GroupDiscussions />} />

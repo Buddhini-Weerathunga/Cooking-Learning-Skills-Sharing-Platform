@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Modal, Button } from "react-bootstrap";
+import { FaExclamationTriangle, FaTrash, FaTimes, FaEdit, FaEye } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CommunityHome = () => {
   const [groups, setGroups] = useState([]);
   const [showEditSuccess, setShowEditSuccess] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [groupToDelete, setGroupToDelete] = useState(null);
 
   const fetchGroups = () => {
     axios.get("http://localhost:8080/api/groups").then((res) => setGroups(res.data));
@@ -25,10 +29,20 @@ const CommunityHome = () => {
     return () => window.removeEventListener('groupsUpdated', handler);
   }, []);
 
-  const handleDelete = async (groupId) => {
-    if (window.confirm("Are you sure you want to delete this group?")) {
-      await axios.delete(`http://localhost:8080/api/groups/${groupId}`);
-      setGroups((prev) => prev.filter((g) => g.id !== groupId));
+  const handleDelete = (group) => {
+    setGroupToDelete(group);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8080/api/groups/${groupToDelete.id}`);
+      setGroups((prev) => prev.filter((g) => g.id !== groupToDelete.id));
+      setShowDeleteModal(false);
+      setGroupToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete group:", error);
+      alert("Failed to delete group. Please try again.");
     }
   };
 
@@ -69,13 +83,16 @@ const CommunityHome = () => {
                     <span className="badge bg-secondary mb-2 category-badge" style={{ background: "#ffe0b2", color: "#ff9800" }}>{g.category || "No Category"}</span>
                     <div className="mt-auto d-flex flex-column gap-2 align-items-center">
                       <Link to={`/community/groups/${g.id}`} className="btn view-btn mb-1 fw-bold" style={{ fontSize: 16, maxWidth: 220 }}>
+                        <FaEye className="me-2" />
                         View Details
                       </Link>
                       <div className="d-flex gap-2 justify-content-center">
                         <Link to={`/community/groups/${g.id}/edit`} className="btn edit-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }}>
+                          <FaEdit className="me-1" />
                           Edit
                         </Link>
-                        <button className="btn delete-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }} onClick={() => handleDelete(g.id)}>
+                        <button className="btn delete-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }} onClick={() => handleDelete(g)}>
+                          <FaTrash className="me-1" />
                           Delete
                         </button>
                       </div>
@@ -87,6 +104,52 @@ const CommunityHome = () => {
           </div>
         )}
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+        <Modal.Header className="modal-header">
+          <Modal.Title className="text-danger">
+            <FaExclamationTriangle className="me-2" />
+            Delete Group
+          </Modal.Title>
+          <Button 
+            variant="link" 
+            className="close-btn" 
+            onClick={() => setShowDeleteModal(false)}
+          >
+            <FaTimes />
+          </Button>
+        </Modal.Header>
+        <Modal.Body className="modal-body">
+          <div className="warning-icon">
+            <FaExclamationTriangle />
+          </div>
+          <p className="warning-text">
+            Are you sure you want to delete <strong>{groupToDelete?.name}</strong>?
+          </p>
+          <p className="warning-subtext">
+            This action cannot be undone. All group content will be permanently deleted.
+          </p>
+        </Modal.Body>
+        <Modal.Footer className="modal-footer">
+          <Button 
+            variant="secondary" 
+            className="cancel-btn"
+            onClick={() => setShowDeleteModal(false)}
+          >
+            Cancel
+          </Button>
+          <Button 
+            variant="danger" 
+            className="confirm-delete-btn"
+            onClick={confirmDelete}
+          >
+            <FaTrash className="me-2" />
+            Delete Group
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
       <style>{`
         .group-card {
           /* ...existing styles... */
@@ -132,6 +195,70 @@ const CommunityHome = () => {
         .delete-btn:hover {
           background: #b71c1c !important;
           color: #fff !important;
+        }
+
+        /* Modal Styles */
+        .modal-content {
+          border-radius: 20px;
+          border: none;
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .modal-header {
+          border-bottom: none;
+          padding: 1.5rem 1.5rem 0.5rem;
+        }
+        .modal-title {
+          font-size: 1.5rem;
+          font-weight: 600;
+        }
+        .close-btn {
+          color: #666;
+          padding: 0.5rem;
+          transition: all 0.2s ease;
+        }
+        .close-btn:hover {
+          color: #333;
+          transform: rotate(90deg);
+        }
+        .modal-body {
+          padding: 2rem 1.5rem;
+          text-align: center;
+        }
+        .warning-icon {
+          font-size: 3rem;
+          color: #f44336;
+          margin-bottom: 1rem;
+        }
+        .warning-text {
+          font-size: 1.2rem;
+          color: #333;
+          margin-bottom: 0.5rem;
+        }
+        .warning-subtext {
+          color: #666;
+          font-size: 0.9rem;
+        }
+        .modal-footer {
+          border-top: none;
+          padding: 1rem 1.5rem 1.5rem;
+          justify-content: center;
+          gap: 1rem;
+        }
+        .cancel-btn, .confirm-delete-btn {
+          padding: 0.8rem 1.5rem;
+          font-weight: 600;
+          border-radius: 10px;
+          transition: all 0.3s ease;
+        }
+        .cancel-btn:hover, .confirm-delete-btn:hover {
+          transform: translateY(-2px);
+        }
+        .confirm-delete-btn {
+          background: #f44336;
+          border: none;
+        }
+        .confirm-delete-btn:hover {
+          background: #d32f2f;
         }
       `}</style>
     </div>

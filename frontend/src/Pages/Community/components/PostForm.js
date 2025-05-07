@@ -24,7 +24,15 @@ const PostForm = ({ show, handleClose, handleSubmit, initialData = null }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    handleSubmit(formData);
+    // Prepare FormData for backend
+    const data = new FormData();
+    data.append('title', formData.title);
+    data.append('content', formData.content);
+    data.append('tags', Array.isArray(formData.tags) ? formData.tags.join(',') : formData.tags);
+    if (formData.image && formData.image instanceof File) {
+      data.append('image', formData.image);
+    }
+    handleSubmit(data);
     handleClose();
   };
 

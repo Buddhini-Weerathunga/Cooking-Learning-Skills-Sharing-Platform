@@ -34,7 +34,9 @@ const GroupPosts = () => {
 
   const handleCreatePost = async (formData) => {
     try {
-      await axios.post(`http://localhost:8080/api/groups/${groupId}/posts`, formData);
+      await axios.post(`http://localhost:8080/api/groups/${groupId}/posts`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       fetchPosts();
       setShowForm(false);
     } catch (err) {
@@ -44,7 +46,9 @@ const GroupPosts = () => {
 
   const handleUpdatePost = async (formData) => {
     try {
-      await axios.put(`http://localhost:8080/api/groups/${groupId}/posts/${editingPost.id}`, formData);
+      await axios.put(`http://localhost:8080/api/groups/${groupId}/posts/${editingPost.id}`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
       fetchPosts();
       setShowForm(false);
       setEditingPost(null);

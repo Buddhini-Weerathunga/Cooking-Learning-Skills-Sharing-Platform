@@ -9,6 +9,8 @@ import GroupPosts from '../Pages/Community/GroupPosts';
 import GroupMembers from '../Pages/Community/GroupMembers';
 import DiscussionDetail from '../Pages/Community/DiscussionDetail';
 import PostDetail from '../Pages/Community/PostDetail';
+import PostsMock from '../Pages/Community/PostsMock';
+import DiscussionsMock from '../Pages/Community/DiscussionsMock';
 
 const CommunityRoutes = () => {
   return (
@@ -27,6 +29,8 @@ const CommunityRoutes = () => {
       <Route path="/groups/:groupId/posts" element={<GroupPosts />} />
       <Route path="/groups/:groupId/posts/:postId" element={<PostDetail />} />
       <Route path="/groups/:groupId/members" element={<GroupMembers />} />
+      <Route path="/posts-mock" element={<PostsMock />} />
+      <Route path="/discussions-mock" element={<DiscussionsMock />} />
       <Route path="*" element={<Navigate to="/community" replace />} />
     </Routes>
   );

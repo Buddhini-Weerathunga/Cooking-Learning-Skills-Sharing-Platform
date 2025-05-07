@@ -228,4 +228,5 @@ const PostsMock = () => {
   );
 };
 
+
 export default PostsMock; 

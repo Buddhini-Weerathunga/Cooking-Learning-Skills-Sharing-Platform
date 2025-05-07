@@ -1,6 +1,11 @@
 package com.pafproject.backend.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "posts")
@@ -10,65 +15,81 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "post_name", nullable = false)
-    private String postName;
+    @Column(nullable = false)
+    private String type;
 
-    @Column(name = "post_title", nullable = false)
-    private String postTitle;
+    @Column(nullable = false)
+    private String title;
 
-    @Column(name = "post_content", columnDefinition = "TEXT")
-    private String postContent;
+    @Column(columnDefinition = "TEXT")
+    private String description;
 
-    @Column(name = "author", nullable = false)
-    private String author;
+    @Column
+    private String tags;
 
-    // Constructors
-    public Post() {
+    @Column(name = "image_url")
+    private String imageUrl;
+
+    public Post() { }
+
+    public Post(String type,
+                String title,
+                String description,
+                String tags,
+                String imageUrl) {
+        this.type = type;
+        this.title = title;
+        this.description = description;
+        this.tags = tags;
+        this.imageUrl = imageUrl;
     }
 
-    public Post(String postName, String postTitle, String postContent, String author) {
-        this.postName = postName;
-        this.postTitle = postTitle;
-        this.postContent = postContent;
-        this.author = author;
-    }
-
-    // Getters and Setters
-
+    // --- getters & setters ---
     public Long getId() {
         return id;
     }
 
-    public String getPostName() {
-        return postName;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setPostName(String postName) {
-        this.postName = postName;
+    public String getType() {
+        return type;
     }
 
-    public String getPostTitle() {
-        return postTitle;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public void setPostTitle(String postTitle) {
-        this.postTitle = postTitle;
+    public String getTitle() {
+        return title;
     }
 
-    public String getPostContent() {
-        return postContent;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public void setPostContent(String postContent) {
-        this.postContent = postContent;
+    public String getDescription() {
+        return description;
     }
 
-    public String getAuthor() {
-        return author;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setAuthor(String author) {
-        this.author = author;
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
-

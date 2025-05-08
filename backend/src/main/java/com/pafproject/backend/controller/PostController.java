@@ -4,6 +4,7 @@ import com.pafproject.backend.models.Post;
 import com.pafproject.backend.repository.PostRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,7 +22,27 @@ public class PostController {
     }
 
     @PostMapping
-    public Post createPost(@RequestBody Post post) {
+    public Post createPost(
+        @RequestParam("postName") String postName,
+        @RequestParam("postTitle") String postTitle,
+        @RequestParam("postContent") String postContent,
+        @RequestParam("author") String author,
+        @RequestParam(value = "image", required = false) MultipartFile image,
+        @RequestParam(value = "category", required = false) String category,
+        @RequestParam(value = "tags", required = false) String tags
+    ) {
+        String imagePath = null;
+        if (image != null && !image.isEmpty()) {
+            imagePath = image.getOriginalFilename(); // Replace with your storage logic
+        }
+        Post post = new Post();
+        post.setPostName(postName);
+        post.setPostTitle(postTitle);
+        post.setPostContent(postContent);
+        post.setAuthor(author);
+        post.setImagePath(imagePath);
+        post.setCategory(category);
+        post.setTags(tags);
         return postRepository.save(post);
     }
 

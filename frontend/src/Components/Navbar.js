@@ -28,7 +28,7 @@ function Navbar() {
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
           <ul
-            className="navbar-nav ml-auto" // changed from mr-auto to ml-auto
+            className="navbar-nav ml-auto"
             style={{
               gap: "25px",
               fontSize: "20px",
@@ -48,9 +48,9 @@ function Navbar() {
               </a>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
+              <Link to="/community/posts" className="nav-link">
                 Skills
-              </a>
+              </Link>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">

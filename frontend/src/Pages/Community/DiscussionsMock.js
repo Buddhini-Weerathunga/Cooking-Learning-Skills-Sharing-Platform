@@ -278,7 +278,7 @@ const DiscussionsMock = () => {
         </Modal>
 
         {/* Delete Confirmation Modal */}
-        <Modal show={showDeleteModal} onHide={cancelDelete} centered>
+        {/* <Modal show={showDeleteModal} onHide={cancelDelete} centered>
           <Modal.Body style={{ borderRadius: 20, background: '#fff8f0', textAlign: 'center', padding: '2.5rem 2rem' }}>
             <div style={{ fontSize: 48, color: '#ff9800', marginBottom: 16 }}>
               <i className="fas fa-exclamation-triangle"></i>
@@ -296,7 +296,7 @@ const DiscussionsMock = () => {
               </Button>
             </div>
           </Modal.Body>
-        </Modal>
+        </Modal> */}
 
         {/* Detail Modal */}
         <Modal show={showDetail} onHide={closeDetail} size="lg" centered>

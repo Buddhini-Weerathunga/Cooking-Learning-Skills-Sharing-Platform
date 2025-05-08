@@ -105,7 +105,7 @@ const CommunityHomePage = () => {
             <Nav.Item className="mx-4 nav-animated">
               <Nav.Link
                 eventKey="discussions"
-                onClick={() => navigate('/community/groups/1/discussions')}
+                onClick={() => navigate('/community/discussions')}
                 style={{ fontWeight: 'bold', color: 'black', backgroundColor: '#ff6a00', transition: 'all 0.3s ease', padding: '6px 16px', borderRadius: '8px' }}
               >
                 Discussions

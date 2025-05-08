@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { Modal, Button } from "react-bootstrap";
-import { FaExclamationTriangle, FaTrash, FaTimes, FaEdit, FaEye } from "react-icons/fa";
+import { Button, Container, ToastContainer, Toast } from "react-bootstrap";
+import { FaTrash, FaEdit, FaEye, FaExclamationTriangle } from "react-icons/fa";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const CommunityHome = () => {
   const [groups, setGroups] = useState([]);
   const [showEditSuccess, setShowEditSuccess] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [groupToDelete, setGroupToDelete] = useState(null);
+  const [toastMessage, setToastMessage] = useState({ type: null, message: '' });
+  const [showToast, setShowToast] = useState(false);
+  const [deletePopup, setDeletePopup] = useState({ show: false, group: null });
 
   const fetchGroups = () => {
     axios.get("http://localhost:8080/api/groups").then((res) => setGroups(res.data));
@@ -17,10 +18,8 @@ const CommunityHome = () => {
 
   useEffect(() => {
     fetchGroups();
-    // Listen for the custom event to refresh groups after edit
     const handler = () => fetchGroups();
     window.addEventListener('groupsUpdated', handler);
-    // Show success alert if redirected from edit
     if (localStorage.getItem('groupEditSuccess')) {
       setShowEditSuccess(true);
       localStorage.removeItem('groupEditSuccess');
@@ -29,21 +28,28 @@ const CommunityHome = () => {
     return () => window.removeEventListener('groupsUpdated', handler);
   }, []);
 
-  const handleDelete = (group) => {
-    setGroupToDelete(group);
-    setShowDeleteModal(true);
+  const handleDelete = async (group) => {
+    setDeletePopup({ show: true, group });
   };
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8080/api/groups/${groupToDelete.id}`);
-      setGroups((prev) => prev.filter((g) => g.id !== groupToDelete.id));
-      setShowDeleteModal(false);
-      setGroupToDelete(null);
+      await axios.delete(`http://localhost:8080/api/groups/${deletePopup.group.id}`);
+      setGroups((prev) => prev.filter((g) => g.id !== deletePopup.group.id));
+      setToastMessage({ 
+        type: 'success', 
+        message: `"${deletePopup.group.name}" has been deleted successfully` 
+      });
+      setShowToast(true);
     } catch (error) {
       console.error("Failed to delete group:", error);
-      alert("Failed to delete group. Please try again.");
+      setToastMessage({ 
+        type: 'danger', 
+        message: error.response?.data?.message || 'Failed to delete group. Please try again.' 
+      });
+      setShowToast(true);
     }
+    setDeletePopup({ show: false, group: null });
   };
 
   return (
@@ -91,7 +97,16 @@ const CommunityHome = () => {
                           <FaEdit className="me-1" />
                           Edit
                         </Link>
-                        <button className="btn delete-btn fw-bold" style={{ fontSize: 13, padding: "4px 18px", minWidth: 80 }} onClick={() => handleDelete(g)}>
+                        <button 
+                          className="btn delete-btn fw-bold" 
+                          style={{ 
+                            fontSize: 13, 
+                            padding: "4px 18px", 
+                            minWidth: 80,
+                            transition: 'all 0.2s ease'
+                          }} 
+                          onClick={() => handleDelete(g)}
+                        >
                           <FaTrash className="me-1" />
                           Delete
                         </button>
@@ -105,50 +120,74 @@ const CommunityHome = () => {
         )}
       </div>
 
-      {/* Delete Confirmation Modal */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header className="modal-header">
-          <Modal.Title className="text-danger">
-            <FaExclamationTriangle className="me-2" />
-            Delete Group
-          </Modal.Title>
-          <Button 
-            variant="link" 
-            className="close-btn" 
-            onClick={() => setShowDeleteModal(false)}
-          >
-            <FaTimes />
-          </Button>
-        </Modal.Header>
-        <Modal.Body className="modal-body">
-          <div className="warning-icon">
-            <FaExclamationTriangle />
+      {/* Delete Confirmation Popup */}
+      {deletePopup.show && (
+        <div className="delete-popup-overlay">
+          <div className="delete-popup">
+            <div className="delete-popup-icon">
+              <FaExclamationTriangle />
+            </div>
+            <h4>Delete Group</h4>
+            <p>Are you sure you want to delete "{deletePopup.group?.name}"?</p>
+            <div className="delete-popup-buttons">
+              <button 
+                className="cancel-btn"
+                onClick={() => setDeletePopup({ show: false, group: null })}
+              >
+                Cancel
+              </button>
+              <button 
+                className="confirm-delete-btn"
+                onClick={confirmDelete}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-          <p className="warning-text">
-            Are you sure you want to delete <strong>{groupToDelete?.name}</strong>?
-          </p>
-          <p className="warning-subtext">
-            This action cannot be undone. All group content will be permanently deleted.
-          </p>
-        </Modal.Body>
-        <Modal.Footer className="modal-footer">
-          <Button 
-            variant="secondary" 
-            className="cancel-btn"
-            onClick={() => setShowDeleteModal(false)}
+        </div>
+      )}
+
+      {/* Toast Container */}
+      <ToastContainer position="top-end" className="p-3" style={{ zIndex: 1070 }}>
+        <Toast 
+          show={showToast} 
+          onClose={() => setShowToast(false)} 
+          delay={3000} 
+          autohide
+          bg={toastMessage.type}
+          style={{
+            minWidth: '300px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            borderRadius: '12px',
+            border: 'none'
+          }}
+        >
+          <Toast.Header 
+            closeButton={false} 
+            style={{ 
+              borderRadius: '12px 12px 0 0',
+              background: toastMessage.type === 'success' ? '#4caf50' : '#f44336',
+              color: '#fff',
+              border: 'none'
+            }}
           >
-            Cancel
-          </Button>
-          <Button 
-            variant="danger" 
-            className="confirm-delete-btn"
-            onClick={confirmDelete}
+            <strong className="me-auto">
+              {toastMessage.type === 'success' ? '✅ Success' : '❌ Error'}
+            </strong>
+          </Toast.Header>
+          <Toast.Body 
+            style={{ 
+              color: '#fff',
+              background: toastMessage.type === 'success' ? '#66bb6a' : '#ef5350',
+              borderRadius: '0 0 12px 12px',
+              padding: '12px 16px',
+              fontSize: '15px'
+            }}
           >
-            <FaTrash className="me-2" />
-            Delete Group
-          </Button>
-        </Modal.Footer>
-      </Modal>
+            {toastMessage.message}
+          </Toast.Body>
+        </Toast>
+      </ToastContainer>
 
       <style>{`
         .group-card {
@@ -195,70 +234,88 @@ const CommunityHome = () => {
         .delete-btn:hover {
           background: #b71c1c !important;
           color: #fff !important;
+          transform: translateY(-2px);
         }
-
-        /* Modal Styles */
-        .modal-content {
-          border-radius: 20px;
-          border: none;
+        .delete-popup-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1080;
+          animation: fadeIn 0.2s ease;
+        }
+        .delete-popup {
+          background: white;
+          padding: 2rem;
+          border-radius: 16px;
           box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-        }
-        .modal-header {
-          border-bottom: none;
-          padding: 1.5rem 1.5rem 0.5rem;
-        }
-        .modal-title {
-          font-size: 1.5rem;
-          font-weight: 600;
-        }
-        .close-btn {
-          color: #666;
-          padding: 0.5rem;
-          transition: all 0.2s ease;
-        }
-        .close-btn:hover {
-          color: #333;
-          transform: rotate(90deg);
-        }
-        .modal-body {
-          padding: 2rem 1.5rem;
           text-align: center;
+          max-width: 400px;
+          width: 90%;
+          animation: slideUp 0.3s ease;
         }
-        .warning-icon {
-          font-size: 3rem;
-          color: #f44336;
+        .delete-popup-icon {
+          font-size: 48px;
+          color: #ff9800;
           margin-bottom: 1rem;
         }
-        .warning-text {
-          font-size: 1.2rem;
-          color: #333;
+        .delete-popup h4 {
+          color: #d32f2f;
+          font-weight: 700;
           margin-bottom: 0.5rem;
         }
-        .warning-subtext {
-          color: #666;
-          font-size: 0.9rem;
+        .delete-popup p {
+          color: #6d4c41;
+          font-size: 1.1rem;
+          margin-bottom: 1.5rem;
         }
-        .modal-footer {
-          border-top: none;
-          padding: 1rem 1.5rem 1.5rem;
-          justify-content: center;
+        .delete-popup-buttons {
+          display: flex;
           gap: 1rem;
+          justify-content: center;
         }
-        .cancel-btn, .confirm-delete-btn {
+        .delete-popup-buttons button {
           padding: 0.8rem 1.5rem;
-          font-weight: 600;
+          border: none;
           border-radius: 10px;
-          transition: all 0.3s ease;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s ease;
         }
-        .cancel-btn:hover, .confirm-delete-btn:hover {
+        .cancel-btn {
+          background: #ff9800;
+          color: white;
+        }
+        .cancel-btn:hover {
+          background: #f57c00;
           transform: translateY(-2px);
         }
         .confirm-delete-btn {
-          background: #f44336;
-          border: none;
+          background: #d32f2f;
+          color: white;
         }
         .confirm-delete-btn:hover {
-          background: #d32f2f;
+          background: #b71c1c;
+          transform: translateY(-2px);
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { 
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to { 
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
       `}</style>
     </div>

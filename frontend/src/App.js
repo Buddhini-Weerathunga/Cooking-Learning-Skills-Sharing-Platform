@@ -11,7 +11,6 @@ import Register from "./Pages/Register";
 import StudentDashboard from "./Pages/StudentDashboard";
 import ListPost from "./Pages/Posts/ListPost";
 import Dashboard from "./Pages/Dashboard";
-import CreatePost from "./Pages/Posts/CreatePost";
 import UpdatePost from "./Pages/Posts/UpdatePost";
 import CreateCommunityGroup from "./Pages/Admin/CommunityGroup/Create";
 import InstructorDashboard from "./Pages/InstructorDashboard";
@@ -24,6 +23,9 @@ import CommunityRoutes from './routes/CommunityRoutes';
 import ErrorBoundary from './Components/ErrorBoundary';
 import CommunityHome from './Pages/Community/CommunityHome';
 import Layout from './Components/Layout';
+import PostsPortal from './Pages/Community/PostsPortal';
+import EditPost from './Pages/Community/EditPost';
+import CreatePost from "./Pages/Community/CreatePost";
 
 function App() {
   return (
@@ -49,6 +51,9 @@ function App() {
             <Route path="/certifications/:id" element={<CertificationDetail />} />
             <Route path="/certifications" element={<CertificationList />} />
             <Route path="/community/groups" element={<CommunityHome />} />
+            <Route path="/community/posts" element={<PostsPortal />} />
+            <Route path="/community/posts/create" element={<CreatePost />} />
+            <Route path="/community/posts/edit/:id" element={<EditPost />} />
             <Route path="/community/*" element={<CommunityRoutes />} />
           </Routes>
         </Layout>

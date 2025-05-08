@@ -24,6 +24,7 @@ public class SecurityConfig {
             .requestMatchers("/api/items/**").permitAll()
             .requestMatchers("/api/posts/**").permitAll() 
             .requestMatchers("/api/certifications/**").permitAll()
+            .requestMatchers("/api/enrollments/**").permitAll()
             .requestMatchers("/api/communities/**").permitAll() // 👈 temporarily open this
             .anyRequest().authenticated()
         )

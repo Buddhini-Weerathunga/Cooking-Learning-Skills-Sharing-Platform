@@ -30,6 +30,10 @@ public class CourseService {
     public List<Course> getCoursesByInstructor(String username) {
         return courseRepo.findByInstructor_Username(username);
     }
+    public List<Course> getAllCourses() {
+        return courseRepo.findAll();
+    }
+    
 
     // Method to delete a course by its ID
     public void deleteCourse(Long id) {

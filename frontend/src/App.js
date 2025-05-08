@@ -18,6 +18,8 @@ import CertificationList from "./Pages/Certifications/list";
 import CertificationCreate from "./Pages/Certifications/create";
 import CertificationEdit from "./Pages/Certifications/edit";
 import CertificationDetail from "./Pages/Certifications/detail";
+import AllCourses from "./Pages/Courses/allcourses";
+import EnrollmentForm from "./Pages/Courses/EnrollmentForm";
 
 function App() {
   return (
@@ -53,6 +55,8 @@ function App() {
           />
           <Route path="/certifications/:id" element={<CertificationDetail />} />
           <Route path="/certifications" element={<CertificationList />} />
+          <Route path="/allcourses" element={<AllCourses />} />
+          <Route path="/enroll" element={<EnrollmentForm />} />
         </Routes>
       </Router>
     </div>

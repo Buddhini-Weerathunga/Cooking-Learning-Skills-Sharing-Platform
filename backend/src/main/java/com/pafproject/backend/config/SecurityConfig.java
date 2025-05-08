@@ -22,6 +22,11 @@ public class SecurityConfig {
             .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeHttpRequests()
+                .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
+                .requestMatchers(HttpMethod.DELETE, "/api/discussions/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/discussions/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/discussions/**").permitAll()
+                .requestMatchers(HttpMethod.PUT, "/api/discussions/**").permitAll()
                 .anyRequest().permitAll()
             .and()
             .formLogin().disable();
@@ -40,8 +45,10 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                     .allowedOrigins("http://localhost:3000")
-                    .allowedMethods("*")
-                    .allowedHeaders("*");
+                    .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                    .allowedHeaders("*")
+                    .allowCredentials(true)
+                    .maxAge(3600);
             }
         };
     }

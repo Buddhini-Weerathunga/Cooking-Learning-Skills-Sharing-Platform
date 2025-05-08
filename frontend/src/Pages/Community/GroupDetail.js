@@ -89,14 +89,14 @@ const GroupDetail = () => {
           </div>
         </div>
       </Container>
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
+      {/* <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Body style={{ borderRadius: 20, background: '#fff8f0', textAlign: 'center', padding: '2.5rem 2rem' }}>
           <div style={{ fontSize: 48, color: '#ff9800', marginBottom: 16 }}>
             <i className="fas fa-exclamation-triangle"></i>
           </div>
-          <h4 style={{ color: '#d32f2f', fontWeight: 700, marginBottom: 12 }}>Delete Group?</h4>
+          <h4 style={{ color: '#d32f2f', fontWeight: 700, marginBottom: 12 }}>Delete Discussion?</h4>
           <p style={{ color: '#6d4c41', fontSize: 18, marginBottom: 28 }}>
-            Are you sure you want to delete this group? This action cannot be undone.
+            Are you sure you want to delete this discussion? This action cannot be undone.
           </p>
           <div className="d-flex justify-content-center gap-3">
             <Button onClick={() => setShowDeleteModal(false)} style={{ background: '#ff9800', border: 'none', fontWeight: 600, fontSize: 17, borderRadius: 10, padding: '10px 32px' }}>
@@ -107,7 +107,7 @@ const GroupDetail = () => {
             </Button>
           </div>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
       <style>{`
         .edit-btn:hover {
           background: #01579b !important;

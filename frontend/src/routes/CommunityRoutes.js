@@ -11,6 +11,9 @@ import DiscussionDetail from '../Pages/Community/DiscussionDetail';
 import PostDetail from '../Pages/Community/PostDetail';
 import PostsMock from '../Pages/Community/PostsMock';
 import DiscussionsMock from '../Pages/Community/DiscussionsMock';
+import DiscussionsPortal from '../Pages/Community/DiscussionsPortal';
+import StartDiscussionPage from '../Pages/Community/StartDiscussionPage';
+import EditDiscussionPage from '../Pages/Community/EditDiscussionPage';
 
 const CommunityRoutes = () => {
   return (
@@ -29,8 +32,18 @@ const CommunityRoutes = () => {
       <Route path="/groups/:groupId/posts" element={<GroupPosts />} />
       <Route path="/groups/:groupId/posts/:postId" element={<PostDetail />} />
       <Route path="/groups/:groupId/members" element={<GroupMembers />} />
+      
+      {/* Mock Routes */}
       <Route path="/posts-mock" element={<PostsMock />} />
       <Route path="/discussions-mock" element={<DiscussionsMock />} />
+      
+      {/* Discussions Portal Route */}
+      <Route path="/discussions" element={<DiscussionsPortal />} />
+      
+      <Route path="/discussions/new" element={<StartDiscussionPage />} />
+      
+      <Route path="/discussions/:id/edit" element={<EditDiscussionPage />} />
+      
       <Route path="*" element={<Navigate to="/community" replace />} />
     </Routes>
   );

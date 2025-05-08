@@ -2,17 +2,18 @@ package com.pafproject.backend.controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import java.io.File;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.pafproject.backend.models.Discussion;
 import com.pafproject.backend.repository.DiscussionRepository;
+import com.pafproject.backend.service.FileStorageService;
 import org.springframework.http.ResponseEntity;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 
 @RestController
 @RequestMapping("/api/discussions")
@@ -22,22 +23,23 @@ public class DiscussionController {
     @Autowired
     private DiscussionRepository discussionRepository;
 
+    @Autowired
+    private FileStorageService fileStorageService;
+
+    @PersistenceContext
+    private EntityManager entityManager;
+
     // Image upload endpoint
     @PostMapping("/upload")
-    public Map<String, String> uploadAvatar(@RequestParam("file") MultipartFile file) throws IOException {
-        // Use an absolute path for the upload directory
-        String uploadDir = System.getProperty("user.dir") + File.separator + "uploads" + File.separator + "avatars" + File.separator;
-        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
-        File dest = new File(uploadDir + fileName);
-        dest.getParentFile().mkdirs(); // Ensure the directory exists
-        file.transferTo(dest);
-        String url = "/uploads/avatars/" + fileName; // This is what you store in the DB
-        return Collections.singletonMap("url", url);
+    public Map<String, String> uploadAvatar(@RequestParam("file") MultipartFile file) throws Exception {
+        String fileUrl = fileStorageService.storeFile(file);
+        return Collections.singletonMap("url", fileUrl);
     }
 
     // Create a new discussion
     @PostMapping
     public ResponseEntity<Discussion> createDiscussion(@RequestBody Discussion discussion) {
+        System.out.println("Received discussion: " + discussion);
         Discussion saved = discussionRepository.save(discussion);
         return ResponseEntity.ok(saved);
     }
@@ -76,12 +78,37 @@ public class DiscussionController {
 
     // Delete a discussion
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteDiscussion(@PathVariable Long id) {
-        if (!discussionRepository.existsById(id)) {
-            return ResponseEntity.notFound().build();
+    @Transactional
+    public ResponseEntity<Map<String, String>> deleteDiscussion(@PathVariable Long id) {
+        System.out.println("Delete request received for discussion ID: " + id);
+        
+        try {
+            // First try to find the discussion
+            Optional<Discussion> discussionOpt = discussionRepository.findById(id);
+            
+            if (!discussionOpt.isPresent()) {
+                System.out.println("Discussion not found with ID: " + id);
+                return ResponseEntity.status(404)
+                    .body(Collections.singletonMap("message", "Discussion not found with ID: " + id));
+            }
+            
+            Discussion discussion = discussionOpt.get();
+            System.out.println("Found discussion: " + discussion);
+            
+            // Delete using repository
+            discussionRepository.delete(discussion);
+            System.out.println("Discussion deleted successfully");
+            
+            return ResponseEntity.ok()
+                .body(Collections.singletonMap("message", "Discussion successfully deleted"));
+                
+        } catch (Exception e) {
+            System.out.println("Error during deletion: " + e.getClass().getName());
+            System.out.println("Error message: " + e.getMessage());
+            e.printStackTrace();
+            return ResponseEntity.status(500)
+                .body(Collections.singletonMap("message", "Error deleting discussion: " + e.getMessage()));
         }
-        discussionRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
     }
 
     // TODO: Add other discussion CRUD endpoints here

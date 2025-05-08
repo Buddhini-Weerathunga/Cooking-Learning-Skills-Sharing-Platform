@@ -22,6 +22,15 @@ public class Post {
     @Column(name = "author", nullable = false)
     private String author;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
+    @Column(name = "category")
+    private String category;
+
+    @Column(name = "tags")
+    private String tags;
+
     // Constructors
     public Post() {
     }
@@ -69,6 +78,30 @@ public class Post {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
     }
 }
 

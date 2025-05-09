@@ -26,6 +26,7 @@ public class Post {
     public Post() {
     }
 
+    
     public Post(String postName, String postTitle, String postContent, String author) {
         this.postName = postName;
         this.postTitle = postTitle;

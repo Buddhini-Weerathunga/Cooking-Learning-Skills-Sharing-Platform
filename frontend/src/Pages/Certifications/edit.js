@@ -1,11 +1,34 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { getCertification, updateCertification } from "./certificationService";
-import Layout from "../../Components/Layout"; // Adjust the path as needed
+import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { getCertification, updateCertification } from './certificationService';
+import { FaSave, FaPlus, FaTrash, FaClock, FaGraduationCap, FaAward, FaCheckCircle, FaInfoCircle, FaBook } from 'react-icons/fa';
+import './Certification.css';
+import CertificationNav from '../../Components/CertificationNav';
 
-function CertificationEdit() {
+const certificationTitles = [
+  "Professional Chef Certification",
+  "Pastry Arts Certification",
+  "Culinary Arts Fundamentals",
+  "International Cuisine Specialist",
+  "Baking and Pastry Master",
+  "Food Safety and Hygiene",
+  "Restaurant Management",
+  "Wine and Beverage Service",
+  "Cake Decorating Professional",
+  "Healthy Cooking Specialist",
+  "Italian Cuisine Expert",
+  "Asian Cuisine Master",
+  "Mediterranean Cooking",
+  "Vegan and Vegetarian Cooking",
+  "Food Photography and Styling"
+];
+
+const EditCertification = () => {
   const { id } = useParams();
-  const [form, setForm] = useState({
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [formData, setFormData] = useState({
     title: "",
     description: "",
     level: "Beginner",
@@ -13,221 +36,348 @@ function CertificationEdit() {
     estimatedHours: 0,
     requirements: [""],
   });
-  const navigate = useNavigate();
+  const [activeStep, setActiveStep] = useState(1);
+  const [validationErrors, setValidationErrors] = useState({});
 
-  useEffect(() => {
-    getCertification(id).then((res) => setForm(res.data));
+  const fetchCertification = useCallback(async () => {
+    try {
+      const response = await getCertification(id);
+      const data = response.data;
+      setFormData({
+        title: data.title || "",
+        description: data.description || "",
+        level: data.level || "Beginner",
+        imageUrl: data.imageUrl || "",
+        estimatedHours: data.estimatedHours || 0,
+        requirements: data.requirements?.length ? data.requirements : [""],
+      });
+      setLoading(false);
+    } catch (err) {
+      setError(err.message);
+      setLoading(false);
+    }
   }, [id]);
 
+  useEffect(() => {
+    fetchCertification();
+  }, [fetchCertification]);
+
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+    // Clear validation error when field is edited
+    if (validationErrors[name]) {
+      setValidationErrors(prev => ({ ...prev, [name]: null }));
+    }
   };
 
   const handleRequirementChange = (idx, value) => {
-    const reqs = [...form.requirements];
+    const reqs = [...formData.requirements];
     reqs[idx] = value;
-    setForm({ ...form, requirements: reqs });
+    setFormData(prev => ({ ...prev, requirements: reqs }));
+    // Clear requirements validation error
+    if (validationErrors.requirements) {
+      setValidationErrors(prev => ({ ...prev, requirements: null }));
+    }
   };
 
   const addRequirement = () => {
-    setForm({ ...form, requirements: [...form.requirements, ""] });
+    setFormData(prev => ({ ...prev, requirements: [...prev.requirements, ""] }));
   };
 
   const removeRequirement = (idx) => {
-    const reqs = form.requirements.filter((_, i) => i !== idx);
-    setForm({ ...form, requirements: reqs });
+    const reqs = formData.requirements.filter((_, i) => i !== idx);
+    setFormData(prev => ({ ...prev, requirements: reqs }));
+  };
+
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.title?.trim()) errors.title = "Title is required";
+    if (!formData.description?.trim()) errors.description = "Description is required";
+    if (!formData.imageUrl?.trim()) errors.imageUrl = "Image URL is required";
+    if (!formData.estimatedHours || formData.estimatedHours <= 0) {
+      errors.estimatedHours = "Hours must be greater than 0";
+    }
+    if (formData.requirements?.some(req => !req?.trim())) {
+      errors.requirements = "All requirements must be filled";
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await updateCertification(id, form);
-    navigate("/certifications");
+    if (!validateForm()) return;
+
+    try {
+      await updateCertification(id, formData);
+      navigate("/certifications");
+    } catch (err) {
+      setError("Failed to update certification. Please try again.");
+      console.error("Error updating certification:", err);
+    }
   };
 
+  const nextStep = () => {
+    if (validateForm()) {
+      setActiveStep(prev => prev + 1);
+    }
+  };
+
+  const prevStep = () => {
+    setActiveStep(prev => prev - 1);
+  };
+
+  if (loading) {
+    return (
+      <div className="certification-hero">
+        <div className="certification-container">
+          <CertificationNav />
+          <div className="loading-container">
+            <div className="loading-spinner"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <Layout>
-      <section
-        style={{
-          background: "#ffedd5",
-          minHeight: "100vh",
-          padding: "60px 0",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "flex-start",
-        }}
-      >
-        <form
-          onSubmit={handleSubmit}
-          style={{
-            background: "#fff",
-            borderRadius: "16px",
-            boxShadow: "0 4px 16px rgba(0,0,0,0.08)",
-            padding: "36px 32px",
-            minWidth: "340px",
-            maxWidth: "480px",
-            width: "100%",
-          }}
-        >
-          <h2
-            style={{
-              fontFamily: "'Madimi One', sans-serif",
-              fontSize: "36px",
-              color: "#ff6804",
-              marginBottom: "24px",
-              textAlign: "center",
-            }}
-          >
-            Edit Certification
-          </h2>
-          <div style={{ marginBottom: "18px" }}>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="Title"
-              required
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1.5px solid #ffd7b3",
-                marginBottom: "10px",
-                fontSize: "18px",
-              }}
-            />
-            <textarea
-              name="description"
-              value={form.description}
-              onChange={handleChange}
-              placeholder="Description"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1.5px solid #ffd7b3",
-                marginBottom: "10px",
-                fontSize: "16px",
-                minHeight: "60px",
-              }}
-            />
-            <select
-              name="level"
-              value={form.level}
-              onChange={handleChange}
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1.5px solid #ffd7b3",
-                marginBottom: "10px",
-                fontSize: "16px",
-              }}
-            >
-              <option>Beginner</option>
-              <option>Intermediate</option>
-              <option>Advanced</option>
-            </select>
-            <input
-              name="imageUrl"
-              value={form.imageUrl}
-              onChange={handleChange}
-              placeholder="Image URL"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1.5px solid #ffd7b3",
-                marginBottom: "10px",
-                fontSize: "16px",
-              }}
-            />
-            <input
-              name="estimatedHours"
-              type="number"
-              value={form.estimatedHours}
-              onChange={handleChange}
-              placeholder="Estimated Hours"
-              style={{
-                width: "100%",
-                padding: "10px",
-                borderRadius: "6px",
-                border: "1.5px solid #ffd7b3",
-                marginBottom: "10px",
-                fontSize: "16px",
-              }}
-            />
-            <label style={{ fontWeight: 600, color: "#ff6804" }}>
-              Requirements:
-            </label>
-            {form.requirements.map((req, idx) => (
-              <div key={idx} style={{ display: "flex", marginBottom: "8px" }}>
-                <input
-                  value={req}
-                  onChange={(e) => handleRequirementChange(idx, e.target.value)}
-                  placeholder="Requirement"
-                  required
-                  style={{
-                    flex: 1,
-                    padding: "8px",
-                    borderRadius: "6px",
-                    border: "1px solid #ffd7b3",
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => removeRequirement(idx)}
-                  disabled={form.requirements.length === 1}
-                  style={{
-                    marginLeft: "8px",
-                    background: "#e74c3c",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "6px",
-                    padding: "0 12px",
-                    cursor: "pointer",
-                  }}
+    <div className="certification-hero">
+      <div className="certification-container">
+        <CertificationNav />
+        <div className="certification-header">
+          <div className="certification-header-content">
+            <h1 className="certification-title">Edit Certification</h1>
+            <p className="certification-subtitle">
+              Update your cooking certification program details
+            </p>
+          </div>
+        </div>
+
+        {error && (
+          <div className="error-message">
+            <FaAward className="error-icon" />
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="certification-form">
+          <div className="form-progress">
+            <div className={`progress-step ${activeStep >= 1 ? 'active' : ''}`}>
+              <FaInfoCircle className="step-icon" />
+              <span>Basic Information</span>
+            </div>
+            <div className={`progress-step ${activeStep >= 2 ? 'active' : ''}`}>
+              <FaBook className="step-icon" />
+              <span>Requirements</span>
+            </div>
+            <div className={`progress-step ${activeStep >= 3 ? 'active' : ''}`}>
+              <FaCheckCircle className="step-icon" />
+              <span>Review & Submit</span>
+            </div>
+          </div>
+
+          {activeStep === 1 && (
+            <div className="form-step">
+              <div className="form-group">
+                <label>
+                  <FaInfoCircle className="input-icon" />
+                  Certification Title
+                </label>
+                <select
+                  name="title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  className={validationErrors.title ? 'error' : ''}
                 >
-                  Remove
+                  <option value="">Select a certification title</option>
+                  {certificationTitles.map((title, index) => (
+                    <option key={index} value={title}>
+                      {title}
+                    </option>
+                  ))}
+                </select>
+                {validationErrors.title && (
+                  <span className="error-message">{validationErrors.title}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <FaInfoCircle className="input-icon" />
+                  Description
+                </label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleChange}
+                  placeholder="Enter certification description"
+                  className={validationErrors.description ? 'error' : ''}
+                />
+                {validationErrors.description && (
+                  <span className="error-message">{validationErrors.description}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <FaGraduationCap className="input-icon" />
+                  Level
+                </label>
+                <select
+                  name="level"
+                  value={formData.level}
+                  onChange={handleChange}
+                >
+                  <option value="Beginner">Beginner</option>
+                  <option value="Intermediate">Intermediate</option>
+                  <option value="Advanced">Advanced</option>
+                </select>
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <FaInfoCircle className="input-icon" />
+                  Image URL
+                </label>
+                <input
+                  name="imageUrl"
+                  value={formData.imageUrl}
+                  onChange={handleChange}
+                  placeholder="Enter image URL"
+                  className={validationErrors.imageUrl ? 'error' : ''}
+                />
+                {validationErrors.imageUrl && (
+                  <span className="error-message">{validationErrors.imageUrl}</span>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label>
+                  <FaClock className="input-icon" />
+                  Estimated Hours
+                </label>
+                <input
+                  name="estimatedHours"
+                  type="number"
+                  value={formData.estimatedHours}
+                  onChange={handleChange}
+                  placeholder="Enter estimated hours"
+                  className={validationErrors.estimatedHours ? 'error' : ''}
+                />
+                {validationErrors.estimatedHours && (
+                  <span className="error-message">{validationErrors.estimatedHours}</span>
+                )}
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={() => navigate("/certifications")} className="cancel-button">
+                  <FaSave className="button-icon" />
+                  Cancel
+                </button>
+                <button type="button" onClick={nextStep} className="next-button">
+                  Next Step
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={addRequirement}
-              style={{
-                background: "#ffd7b3",
-                color: "#ff6804",
-                border: "none",
-                borderRadius: "6px",
-                padding: "6px 16px",
-                cursor: "pointer",
-                fontWeight: 600,
-                marginBottom: "16px",
-              }}
-            >
-              Add Requirement
-            </button>
-          </div>
-          <button
-            type="submit"
-            style={{
-              width: "100%",
-              background: "#ff6804",
-              color: "#fff",
-              border: "none",
-              borderRadius: "6px",
-              padding: "12px",
-              fontSize: "18px",
-              fontWeight: 700,
-              cursor: "pointer",
-            }}
-          >
-            Update
-          </button>
-        </form>
-      </section>
-    </Layout>
-  );
-}
+            </div>
+          )}
 
-export default CertificationEdit;
+          {activeStep === 2 && (
+            <div className="form-step">
+              <div className="form-group">
+                <label>
+                  <FaBook className="input-icon" />
+                  Requirements
+                </label>
+                {formData.requirements.map((req, idx) => (
+                  <div key={idx} className="requirement-input-group">
+                    <input
+                      value={req}
+                      onChange={(e) => handleRequirementChange(idx, e.target.value)}
+                      placeholder={`Requirement ${idx + 1}`}
+                      className={validationErrors.requirements ? 'error' : ''}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeRequirement(idx)}
+                      disabled={formData.requirements.length === 1}
+                      className="remove-requirement-btn"
+                    >
+                      <FaTrash className="button-icon" />
+                    </button>
+                  </div>
+                ))}
+                {validationErrors.requirements && (
+                  <span className="error-message">{validationErrors.requirements}</span>
+                )}
+                <button
+                  type="button"
+                  onClick={addRequirement}
+                  className="add-requirement-btn"
+                >
+                  <FaPlus className="button-icon" />
+                  Add Requirement
+                </button>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={prevStep} className="back-button">
+                  Previous Step
+                </button>
+                <button type="button" onClick={nextStep} className="next-button">
+                  Next Step
+                </button>
+              </div>
+            </div>
+          )}
+
+          {activeStep === 3 && (
+            <div className="form-step">
+              <div className="review-section">
+                <h3>Review Certification Details</h3>
+                <div className="review-content">
+                  <div className="review-item">
+                    <strong>Title:</strong>
+                    <span>{formData.title}</span>
+                  </div>
+                  <div className="review-item">
+                    <strong>Description:</strong>
+                    <span>{formData.description}</span>
+                  </div>
+                  <div className="review-item">
+                    <strong>Level:</strong>
+                    <span>{formData.level}</span>
+                  </div>
+                  <div className="review-item">
+                    <strong>Estimated Hours:</strong>
+                    <span>{formData.estimatedHours}</span>
+                  </div>
+                  <div className="review-item">
+                    <strong>Requirements:</strong>
+                    <ul>
+                      {formData.requirements.map((req, idx) => (
+                        <li key={idx}>{req}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="form-actions">
+                <button type="button" onClick={prevStep} className="back-button">
+                  Previous Step
+                </button>
+                <button type="submit" className="submit-button">
+                  <FaCheckCircle className="button-icon" />
+                  Update Certification
+                </button>
+              </div>
+            </div>
+          )}
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default EditCertification;

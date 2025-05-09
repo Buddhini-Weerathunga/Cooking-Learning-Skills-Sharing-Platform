@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import Navbar from "../Components/Navbar";
+import { Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import { FaHandsHelping } from "react-icons/fa";
@@ -54,19 +55,36 @@ const HomePage = () => {
             pro! "
           </h1>
           <br />
-          <button
-            type="button"
-            class="btn  bg-lg"
-            style={{
-              height: "50px",
-              width: "150px",
-              borderColor: "#ff6804",
-              fontSize: "20px",
-              color: "#ff6804",
-            }}
-          >
-            Get Started
-          </button>
+          <div style={{ display: "flex", gap: "20px" }}>
+            <button
+              type="button"
+              className="btn bg-lg"
+              style={{
+                height: "50px",
+                width: "150px",
+                borderColor: "#ff6804",
+                fontSize: "20px",
+                color: "#ff6804",
+              }}
+            >
+              Get Started
+            </button>
+            <Link to="/certifications">
+              <button
+                type="button"
+                className="btn bg-lg"
+                style={{
+                  height: "50px",
+                  width: "150px",
+                  borderColor: "#ff6804",
+                  fontSize: "20px",
+                  color: "#ff6804",
+                }}
+              >
+                Certificates
+              </button>
+            </Link>
+          </div>
         </div>
 
         <div style={{ flex: "1 1 50%" }}>

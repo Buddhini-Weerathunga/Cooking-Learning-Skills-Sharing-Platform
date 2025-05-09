@@ -63,4 +63,5 @@ export const mockPosts = [
     likes: 15,
     comments: []
   }
+  
 ]; 

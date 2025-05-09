@@ -19,6 +19,7 @@ const GroupPosts = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [postToDelete, setPostToDelete] = useState(null);
 
+  
   useEffect(() => {
     fetchPosts();
   }, [groupId]);

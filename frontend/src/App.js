@@ -53,7 +53,7 @@ function App() {
             <Route path="/community/groups" element={<CommunityHome />} />
             <Route path="/community/posts" element={<PostsPortal />} />
             <Route path="/community/posts/create" element={<CreatePost />} />
-            <Route path="/community/posts/edit/:id" element={<EditPost />} />
+            <Route path="/community/posts/:id/edit" element={<EditPost />} />
             <Route path="/community/*" element={<CommunityRoutes />} />
           </Routes>
         </Layout>

@@ -4,6 +4,8 @@ import { Form, Button, Container, Row, Col, Image } from 'react-bootstrap';
 import axios from 'axios';
 import './DiscussionsPortal.css';
 
+const BACKEND_URL = "http://localhost:8080";
+
 const StartDiscussionPage = () => {
   const navigate = useNavigate();
   const [form, setForm] = useState({ title: '', content: '', author: '', tags: '', avatar: '', category: '', date: '' });
@@ -36,7 +38,7 @@ const StartDiscussionPage = () => {
     const formData = new FormData();
     formData.append('image', file);
     try {
-      const response = await axios.post('/api/upload', formData, {
+      const response = await axios.post(`${BACKEND_URL}/api/upload`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },

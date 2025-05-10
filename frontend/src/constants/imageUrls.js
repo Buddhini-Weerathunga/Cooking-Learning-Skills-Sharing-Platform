@@ -15,6 +15,7 @@ import bakingBanner from '../assets/images/banners/baking-banner.jpg';
 import breadBanner from '../assets/images/banners/bread-banner.jpg';
 import pastryBanner from '../assets/images/banners/pastry-banner.jpg';
 
+
 export const IMAGE_URLS = {
   recipes: {
     sourdoughBread,

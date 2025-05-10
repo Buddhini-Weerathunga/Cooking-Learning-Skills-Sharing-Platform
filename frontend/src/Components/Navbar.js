@@ -48,9 +48,15 @@ function Navbar() {
               </a>
             </li>
             <li className="nav-item">
-              <Link to="/community/posts" className="nav-link">
-                Skills
-              </Link>
+              <div className="dropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" id="skillsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  Skills
+                </a>
+                <ul className="dropdown-menu" aria-labelledby="skillsDropdown">
+                  <li><Link to="/community/posts" className="dropdown-item">All Posts</Link></li>
+                  <li><Link to="/community/posts-mock" className="dropdown-item">Mock Posts</Link></li>
+                </ul>
+              </div>
             </li>
             <li className="nav-item">
               <a className="nav-link" href="#">

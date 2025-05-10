@@ -4,6 +4,7 @@ import { Container, Card, Button, Dropdown, Modal, Form, Alert, Image } from 're
 import axios from 'axios';
 import PostForm from './components/PostForm';
 
+
 const placeholderAvatar = '/images/avatar-placeholder.png'; // Use your own placeholder path
 
 const GroupPosts = () => {

@@ -1,1 +1,2 @@
 com\pafproject\backend\repository\PostRepository.class
+com\pafproject\backend\models\Enrollment.class

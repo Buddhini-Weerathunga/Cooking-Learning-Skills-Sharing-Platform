@@ -19,6 +19,7 @@ const PostDetail = () => {
     setNewComment('');
   };
 
+  
   return (
     <div style={{ marginTop: "120px" }}>
       <Container>

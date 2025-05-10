@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Container, Button, Modal, Form, Image, Row, Col, Toast, ToastContainer } from 'react-bootstrap';
+import { Container, Button, Modal, Form, Image, Row, Col, Toast, ToastContainer, Card } from 'react-bootstrap';
 import { FaPlus, FaUser, FaCalendarAlt, FaTag, FaComments, FaEdit, FaTrash, FaExclamationTriangle, FaHeart, FaShare } from 'react-icons/fa';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -424,12 +424,7 @@ const PostsPortal = () => {
 
         <style>{`
           .post-card-animated {
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
-                      box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-          }
-          .post-card-animated:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(33, 150, 243, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
           }
           .delete-popup-overlay {
             position: fixed;

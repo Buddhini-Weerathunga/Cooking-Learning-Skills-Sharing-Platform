@@ -1,7 +1,8 @@
 package com.pafproject.backend.models;
 
-import java.time.LocalDate;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 public class Course {
@@ -12,26 +13,30 @@ public class Course {
 
     private String title;
     private String description;
-    private Double price;
+    private String content;
+    private double price;
 
     private LocalDate startDate;
-    private LocalDate closingDate;
+    private LocalDate endDate;
 
-    @Column(length = 10000) // Allows longer text for course content
-    private String content;
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Enrollment> enrollments;
 
-    @ManyToOne
-    @JoinColumn(name = "instructor_id")
-    private User instructor;
+    // Constructors
+    public Course() {}
 
-    // --- Getters and Setters ---
-
-    public Long getId() {
-        return id;
+    public Course(String title, String description, String content, double price, LocalDate startDate, LocalDate endDate) {
+        this.title = title;
+        this.description = description;
+        this.content = content;
+        this.price = price;
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Getters and setters
+    public Long getId() {
+        return id;
     }
 
     public String getTitle() {
@@ -50,11 +55,19 @@ public class Course {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -66,27 +79,19 @@ public class Course {
         this.startDate = startDate;
     }
 
-    public LocalDate getClosingDate() {
-        return closingDate;
+    public LocalDate getEndDate() {
+        return endDate;
     }
 
-    public void setClosingDate(LocalDate closingDate) {
-        this.closingDate = closingDate;
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
     }
 
-    public String getContent() {
-        return content;
+    public List<Enrollment> getEnrollments() {
+        return enrollments;
     }
 
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public User getInstructor() {
-        return instructor;
-    }
-
-    public void setInstructor(User instructor) {
-        this.instructor = instructor;
+    public void setEnrollments(List<Enrollment> enrollments) {
+        this.enrollments = enrollments;
     }
 }

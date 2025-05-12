@@ -1,16 +1,16 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import EnrollForm from "./components/EnrollForm";
-import EnrollmentList from "./components/EnrollmentList";
+import EnrollForm from "./Components/EnrollForm";
+import EnrollmentList from "./Components/EnrollmentList";
 
-import HomePage from "./pages/Home";
-import Dashboard from "./pages/Dashboard";
-import CourseView from "./components/CourseView";
-import UpdateCourse from "./components/UpdateCourse";
-import CreateCOurse from "./components/createcourse";
-import View from "./components/view";
-import InstructorLogin from "./pages/instructorLogin";
+import HomePage from "./Pages/Home";
+import Dashboard from "./Pages/Dashboard";
+import CourseView from "./Components/CourseView";
+import UpdateCourse from "./Components/UpdateCourse";
+import CreateCOurse from "./Components/createcourse";
+import View from "./Components/view";
+import InstructorLogin from "./Pages/instructorLogin";
 
 function App() {
   return (
